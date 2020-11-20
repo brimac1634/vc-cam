@@ -48,6 +48,63 @@ class _HomePageState extends State<HomePage>
     return true;
   }
 
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc) {
+          return Wrap(children: [
+            Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                    color: VCAppTheme.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: VCAppTheme.borderRadius,
+                        topRight: VCAppTheme.borderRadius)),
+                child: Column(
+                  children: [
+                    ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                      title: Text(
+                        'Camera',
+                        style: TextStyle(
+                          fontFamily: VCAppTheme.fontName,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 20,
+                          color: VCAppTheme.darkerText,
+                        ),
+                      ),
+                      trailing: Image.asset(
+                        'assets/shoot.png',
+                        width: VCAppTheme.iconWidth,
+                        height: VCAppTheme.iconHeight,
+                      ),
+                      onTap: () => {},
+                    ),
+                    ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+                      title: Text(
+                        'Gallery',
+                        style: TextStyle(
+                          fontFamily: VCAppTheme.fontName,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 20,
+                          color: VCAppTheme.darkerText,
+                        ),
+                      ),
+                      trailing: Image.asset('assets/import.png',
+                          width: VCAppTheme.iconWidth,
+                          height: VCAppTheme.iconHeight),
+                      onTap: () => {},
+                    ),
+                  ],
+                )),
+          ]);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -65,7 +122,9 @@ class _HomePageState extends State<HomePage>
                   tabBody,
                   BottomBarView(
                     tabIconsList: tabIconsList,
-                    addClick: () {},
+                    addClick: () {
+                      _settingModalBottomSheet(context);
+                    },
                     changeIndex: (int index) {
                       if (index == 0) {
                         animationController.reverse().then<dynamic>((data) {

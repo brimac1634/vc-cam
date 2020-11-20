@@ -5,74 +5,85 @@ import '../models/string_block.dart';
 import '../models/ocr_image.dart';
 
 class OCRImages with ChangeNotifier {
-  List<OCRImage> _images = [
-    OCRImage(
+  Map<String, OCRImage> _images = {
+    '123': OCRImage(
         id: '123',
         imageURL:
             'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
         stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
         createdAt: DateTime.now()),
-    OCRImage(
+    '124': OCRImage(
         id: '123',
         imageURL:
             'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
         stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
         createdAt: DateTime.now()),
-    OCRImage(
+    '125': OCRImage(
         id: '123',
         imageURL:
             'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
         stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
         createdAt: DateTime.now()),
-    OCRImage(
+    '126': OCRImage(
         id: '123',
         imageURL:
             'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
         stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
         createdAt: DateTime.now()),
-    OCRImage(
+    '127': OCRImage(
         id: '123',
         imageURL:
             'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
         stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
         createdAt: DateTime.now()),
-    OCRImage(
+    '128': OCRImage(
         id: '123',
         imageURL:
             'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
         stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
         createdAt: DateTime.now()),
-  ];
+  };
 
-  List<OCRImage> get images {
-    return [..._images];
+  List<OCRImage> get imagesArray {
+    return {..._images}.values.toList();
+  }
+
+  Map<String, OCRImage> get imagesMap {
+    return {..._images};
   }
 
   OCRImage findById(String id) {
-    return _images.firstWhere((image) => image.id == id);
+    if (_images.containsKey(id)) {
+      return _images[id];
+    } else {
+      return null;
+    }
   }
 
   void addImage(OCRImage ocrImage) {
-    _images.add(ocrImage);
+    _images[ocrImage.id] = ocrImage;
     notifyListeners();
   }
 
   void updateImage(String id, OCRImage ocrImage) {
-    final _imageIndex = _images.indexWhere((image) => image.id == id);
-    if (_imageIndex >= 0) {
-      _images[_imageIndex] = ocrImage;
+    if (_images.containsKey(id)) {
+      _images[id] = ocrImage;
       notifyListeners();
     }
   }
 
   void deleteImage(String id) {
-    final _imageIndex = _images.indexWhere((image) => image.id == id);
-    if (_imageIndex >= 0) {
-      _images.removeAt(_imageIndex);
+    if (_images.containsKey(id)) {
+      _images.remove(id);
       notifyListeners();
     }
   }
 
-  // provide ordered list by date (same as _iamges), and use multiple pointer
-  void deleteManyImages(List<String> ids) {}
+  void deleteManyImages(List<String> ids) {
+    if (ids.length >= 1) {
+      ids.forEach((id) {
+        _images.remove(id);
+      });
+    }
+  }
 }

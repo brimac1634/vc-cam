@@ -62,7 +62,7 @@ class _OCRImagesPageState extends State<OCRImagesPage>
 
   @override
   Widget build(BuildContext context) {
-    final _images = Provider.of<OCRImages>(context).images;
+    final _images = Provider.of<OCRImages>(context).imagesArray;
 
     return Container(
       color: VCAppTheme.background,
