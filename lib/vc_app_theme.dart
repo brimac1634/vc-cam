@@ -20,6 +20,9 @@ class VCAppTheme {
   static const Color spacer = Color(0xFFF2F2F2);
   static const String fontName = 'Roboto';
 
+  static const double iconWidth = 26;
+  static const double iconHeight = 26;
+
   static const TextTheme textTheme = TextTheme(
     headline4: display1,
     headline5: headline,

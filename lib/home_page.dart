@@ -63,50 +63,39 @@ class _HomePageState extends State<HomePage>
               return Stack(
                 children: <Widget>[
                   tabBody,
-                  bottomBar(),
+                  BottomBarView(
+                    tabIconsList: tabIconsList,
+                    addClick: () {},
+                    changeIndex: (int index) {
+                      if (index == 0) {
+                        animationController.reverse().then<dynamic>((data) {
+                          if (!mounted) {
+                            return;
+                          }
+                          setState(() {
+                            tabBody = OCRImagesPage(
+                                animationController: animationController);
+                          });
+                        });
+                      } else if (index == 1) {
+                        animationController.reverse().then<dynamic>((data) {
+                          if (!mounted) {
+                            return;
+                          }
+                          setState(() {
+                            tabBody = ImageDetailsPage(
+                                animationController: animationController);
+                          });
+                        });
+                      }
+                    },
+                  ),
                 ],
               );
             }
           },
         ),
       ),
-    );
-  }
-
-  Widget bottomBar() {
-    return Column(
-      children: <Widget>[
-        const Expanded(
-          child: SizedBox(),
-        ),
-        BottomBarView(
-          tabIconsList: tabIconsList,
-          addClick: () {},
-          changeIndex: (int index) {
-            if (index == 0) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody =
-                      OCRImagesPage(animationController: animationController);
-                });
-              });
-            } else if (index == 1) {
-              animationController.reverse().then<dynamic>((data) {
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  tabBody = ImageDetailsPage(
-                      animationController: animationController);
-                });
-              });
-            }
-          },
-        ),
-      ],
     );
   }
 }
