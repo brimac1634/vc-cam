@@ -6,11 +6,13 @@ class OCRImage {
   final String id;
   final String imageURL;
   final List<StringBlock> stringBlocks;
-  final DateTime dateTime;
+  final DateTime createdAt;
+  final DateTime editedAt;
 
   OCRImage(
       {@required this.id,
       @required this.imageURL,
       @required this.stringBlocks,
-      @required this.dateTime});
+      @required this.createdAt,
+      this.editedAt});
 }

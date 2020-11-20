@@ -1,9 +1,48 @@
 import 'package:flutter/material.dart';
 
+import '../models/string_block.dart';
+
 import '../models/ocr_image.dart';
 
 class OCRImages with ChangeNotifier {
-  List<OCRImage> _images = [];
+  List<OCRImage> _images = [
+    OCRImage(
+        id: '123',
+        imageURL:
+            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+        createdAt: DateTime.now()),
+    OCRImage(
+        id: '123',
+        imageURL:
+            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+        createdAt: DateTime.now()),
+    OCRImage(
+        id: '123',
+        imageURL:
+            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+        createdAt: DateTime.now()),
+    OCRImage(
+        id: '123',
+        imageURL:
+            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+        createdAt: DateTime.now()),
+    OCRImage(
+        id: '123',
+        imageURL:
+            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+        createdAt: DateTime.now()),
+    OCRImage(
+        id: '123',
+        imageURL:
+            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+        createdAt: DateTime.now()),
+  ];
 
   List<OCRImage> get images {
     return [..._images];

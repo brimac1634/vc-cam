@@ -7,7 +7,7 @@ import '../vc_app_theme.dart';
 
 class GridItem extends StatelessWidget {
   final AnimationController animationController;
-  final Animation animation;
+  final Animation<dynamic> animation;
   final OCRImage ocrImage;
 
   GridItem({@required this.ocrImage, this.animationController, this.animation});
@@ -22,17 +22,11 @@ class GridItem extends StatelessWidget {
           child: new Transform(
             transform: new Matrix4.translationValues(
                 0.0, 30 * (1.0 - animation.value), 0.0),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 24, right: 24, top: 16, bottom: 18),
-              child: Container(
+            child: Container(
+                clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   color: VCAppTheme.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8.0),
-                      bottomLeft: Radius.circular(8.0),
-                      bottomRight: Radius.circular(8.0),
-                      topRight: Radius.circular(68.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
                         color: VCAppTheme.grey.withOpacity(0.2),
@@ -40,15 +34,10 @@ class GridItem extends StatelessWidget {
                         blurRadius: 10.0),
                   ],
                 ),
-                child: AspectRatio(
-                  aspectRatio: 2,
-                  child: Image.asset(
-                    ocrImage.imageURL,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
+                child: Image.network(
+                  ocrImage.imageURL,
+                  fit: BoxFit.cover,
+                )),
           ),
         );
       },
