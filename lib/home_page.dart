@@ -4,6 +4,7 @@ import './pages/ocr_images_page.dart';
 import './pages/image_details_page.dart';
 
 import './components/bottom_bar_view.dart';
+import './components/ml_image_picker.dart';
 
 import './models/tab_icon_data.dart';
 
@@ -61,46 +62,7 @@ class _HomePageState extends State<HomePage>
                     borderRadius: BorderRadius.only(
                         topLeft: VCAppTheme.borderRadius,
                         topRight: VCAppTheme.borderRadius)),
-                child: Column(
-                  children: [
-                    ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-                      title: Text(
-                        'Camera',
-                        style: TextStyle(
-                          fontFamily: VCAppTheme.fontName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 20,
-                          color: VCAppTheme.darkerText,
-                        ),
-                      ),
-                      trailing: Image.asset(
-                        'assets/shoot.png',
-                        width: VCAppTheme.iconWidth,
-                        height: VCAppTheme.iconHeight,
-                      ),
-                      onTap: () => {},
-                    ),
-                    ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-                      title: Text(
-                        'Gallery',
-                        style: TextStyle(
-                          fontFamily: VCAppTheme.fontName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 20,
-                          color: VCAppTheme.darkerText,
-                        ),
-                      ),
-                      trailing: Image.asset('assets/import.png',
-                          width: VCAppTheme.iconWidth,
-                          height: VCAppTheme.iconHeight),
-                      onTap: () => {},
-                    ),
-                  ],
-                )),
+                child: MLImagePicker()),
           ]);
         });
   }

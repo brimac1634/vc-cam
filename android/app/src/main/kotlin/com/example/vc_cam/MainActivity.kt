@@ -1,4 +1,4 @@
-package com.example.vc_cam
+package com.bmacpherson.vc_cam
 
 import io.flutter.embedding.android.FlutterActivity
 
