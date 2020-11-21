@@ -44,6 +44,12 @@ class OCRImages with ChangeNotifier {
         createdAt: DateTime.now()),
   };
 
+  OCRImage _selectedImage;
+
+  OCRImage get selectedImage {
+    return _selectedImage;
+  }
+
   List<OCRImage> get imagesArray {
     return {..._images}.values.toList();
   }
@@ -58,6 +64,11 @@ class OCRImages with ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  void selectImage(String id) {
+    _selectedImage = _images[id];
+    notifyListeners();
   }
 
   void addImage(OCRImage ocrImage) {
