@@ -1,17 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ImageDetailsPage extends StatelessWidget {
+import '../components/top_bar.dart';
+
+import '../providers/ocr_images.dart';
+
+import '../vc_app_theme.dart';
+
+class ImageDetailsPage extends StatefulWidget {
   static const pathName = '/image-details-page';
-  final AnimationController animationController;
 
-  ImageDetailsPage({@required this.animationController});
+  ImageDetailsPage();
 
   @override
+  _ImageDetailsPageState createState() => _ImageDetailsPageState();
+}
+
+class _ImageDetailsPageState extends State<ImageDetailsPage> {
+  @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Text(
-      'Image details here',
-      style: TextStyle(color: Colors.black),
-    ));
+    final animationController =
+        ModalRoute.of(context).settings.arguments as AnimationController;
+    final _selectedImage = Provider.of<OCRImages>(context).selectedImage;
+    return Scaffold(
+      backgroundColor: VCAppTheme.background,
+      body: Stack(children: [
+        Center(
+          child: Text(_selectedImage.stringBlocks.first.text),
+        ),
+        TopBar(
+          topBarOpacity: 1.0,
+          animationController: animationController,
+          title: '',
+          canGoBack: true,
+        ),
+      ]),
+    );
   }
 }

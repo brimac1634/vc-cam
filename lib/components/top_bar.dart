@@ -7,12 +7,14 @@ class TopBar extends StatefulWidget {
   final AnimationController animationController;
   final String title;
   final Widget child;
+  final bool canGoBack;
 
   TopBar(
       {@required this.topBarOpacity,
       @required this.animationController,
-      this.title,
-      @required this.child});
+      @required this.title,
+      this.child,
+      this.canGoBack = false});
 
   @override
   _TopBarState createState() => _TopBarState();
@@ -71,57 +73,39 @@ class _TopBarState extends State<TopBar> with TickerProviderStateMixin {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              widget.title != null
-                                  ? Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          widget.title,
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: VCAppTheme.fontName,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 22 +
-                                                6 -
-                                                6 * widget.topBarOpacity,
-                                            letterSpacing: 1.2,
-                                            color: VCAppTheme.darkerText,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : null,
+                              if (widget.canGoBack)
+                                IconButton(
+                                    icon: Image.asset(
+                                      'assets/left-arrow.png',
+                                      width: VCAppTheme.iconWidth,
+                                      height: VCAppTheme.iconHeight,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    }),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    widget.title,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: VCAppTheme.fontName,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize:
+                                          22 + 6 - 6 * widget.topBarOpacity,
+                                      letterSpacing: 1.2,
+                                      color: VCAppTheme.darkerText,
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Padding(
                                   padding: const EdgeInsets.only(
                                     left: 8,
                                     right: 8,
                                   ),
-                                  child: widget.child
-
-                                  // Row(
-                                  //   children: <Widget>[
-                                  //     Padding(
-                                  //       padding: const EdgeInsets.only(right: 8),
-                                  //       child: Icon(
-                                  //         Icons.calendar_today,
-                                  //         color: VCAppTheme.grey,
-                                  //         size: 18,
-                                  //       ),
-                                  //     ),
-                                  //     Text(
-                                  //       '15 May',
-                                  //       textAlign: TextAlign.left,
-                                  //       style: TextStyle(
-                                  //         fontFamily: VCAppTheme.fontName,
-                                  //         fontWeight: FontWeight.normal,
-                                  //         fontSize: 18,
-                                  //         letterSpacing: -0.2,
-                                  //         color: VCAppTheme.darkerText,
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  ),
+                                  child: widget.child),
                             ],
                           ),
                         )

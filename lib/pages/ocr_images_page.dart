@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import './image_details_page.dart';
 import '../components/top_bar.dart';
 import '../components/grid_item.dart';
 
@@ -77,48 +78,62 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                 return const SizedBox();
               } else {
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 1.0),
-                    controller: scrollController,
-                    padding: EdgeInsets.only(
-                      top: AppBar().preferredSize.height +
-                          MediaQuery.of(context).padding.top +
-                          24,
-                      bottom: 62 + MediaQuery.of(context).padding.bottom,
-                    ),
-                    itemCount: _imagesProvider.imagesArray.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-                      final int count = _imagesProvider.imagesArray.length > 10
-                          ? 10
-                          : _imagesProvider.imagesArray.length;
-                      final Animation<double> _animation =
-                          Tween<double>(begin: 0.0, end: 1.0).animate(
-                              CurvedAnimation(
-                                  parent: widget.animationController,
-                                  curve: Interval((1 / count) * index, 1.0,
-                                      curve: Curves.fastOutSlowIn)));
-                      widget.animationController.forward();
-                      return InkWell(
-                        onTap: () {
-                          _imagesProvider.selectImage(
-                              _imagesProvider.imagesArray[index].id);
-                          // open image detail page
-                        },
-                        child: GridItem(
-                          animationController: widget.animationController,
-                          animation: _animation,
-                          ocrImage: _imagesProvider.imagesArray[index],
-                        ),
-                      );
-                    },
-                  ),
-                );
+                    padding: const EdgeInsets.all(8.0),
+                    child: _imagesProvider.imagesArray.length >= 1
+                        ? GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8,
+                                    childAspectRatio: 1.0),
+                            controller: scrollController,
+                            padding: EdgeInsets.only(
+                              top: AppBar().preferredSize.height +
+                                  MediaQuery.of(context).padding.top +
+                                  24,
+                              bottom:
+                                  62 + MediaQuery.of(context).padding.bottom,
+                            ),
+                            itemCount: _imagesProvider.imagesArray.length,
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (BuildContext context, int index) {
+                              final int count =
+                                  _imagesProvider.imagesArray.length > 10
+                                      ? 10
+                                      : _imagesProvider.imagesArray.length;
+                              final Animation<double> _animation =
+                                  Tween<double>(begin: 0.0, end: 1.0).animate(
+                                      CurvedAnimation(
+                                          parent: widget.animationController,
+                                          curve: Interval(
+                                              (1 / count) * index, 1.0,
+                                              curve: Curves.fastOutSlowIn)));
+                              widget.animationController.forward();
+                              return InkWell(
+                                onTap: () {
+                                  _imagesProvider.selectImage(
+                                      _imagesProvider.imagesArray[index].id);
+                                  Navigator.of(context).pushNamed(
+                                      ImageDetailsPage.pathName,
+                                      arguments: widget.animationController);
+                                  // open image detail page
+                                },
+                                child: GridItem(
+                                  animationController:
+                                      widget.animationController,
+                                  animation: _animation,
+                                  ocrImage: _imagesProvider.imagesArray[index],
+                                ),
+                              );
+                            },
+                          )
+                        : Center(
+                            child: Text(
+                              'Press the plus button below to begin',
+                              style: VCAppTheme.body1,
+                            ),
+                          ));
               }
             },
           ),

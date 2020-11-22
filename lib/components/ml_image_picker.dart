@@ -136,7 +136,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
                 color: VCAppTheme.darkerText,
               ),
             ),
-            trailing: Image.asset('assets/import.png',
+            trailing: Image.asset('assets/gallery.png',
                 width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
             onTap: () async {
               final ocrImages = await _pickAndAnalyzeImages(isCamera: false);
