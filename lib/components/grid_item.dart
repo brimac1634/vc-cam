@@ -34,7 +34,7 @@ class GridItem extends StatelessWidget {
                         blurRadius: 10.0),
                   ],
                 ),
-                child: Image.network(
+                child: Image.asset(
                   ocrImage.imageURL,
                   fit: BoxFit.cover,
                 )),
