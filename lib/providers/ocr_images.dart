@@ -6,42 +6,42 @@ import '../models/ocr_image.dart';
 
 class OCRImages with ChangeNotifier {
   Map<String, OCRImage> _images = {
-    '123': OCRImage(
-        id: '123',
-        imageURL:
-            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
-        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
-        createdAt: DateTime.now()),
-    '124': OCRImage(
-        id: '123',
-        imageURL:
-            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
-        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
-        createdAt: DateTime.now()),
-    '125': OCRImage(
-        id: '123',
-        imageURL:
-            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
-        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
-        createdAt: DateTime.now()),
-    '126': OCRImage(
-        id: '123',
-        imageURL:
-            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
-        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
-        createdAt: DateTime.now()),
-    '127': OCRImage(
-        id: '123',
-        imageURL:
-            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
-        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
-        createdAt: DateTime.now()),
-    '128': OCRImage(
-        id: '123',
-        imageURL:
-            'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
-        stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
-        createdAt: DateTime.now()),
+    // '123': OCRImage(
+    //     id: '123',
+    //     imageURL:
+    //         'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+    //     stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+    //     createdAt: DateTime.now()),
+    // '124': OCRImage(
+    //     id: '123',
+    //     imageURL:
+    //         'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+    //     stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+    //     createdAt: DateTime.now()),
+    // '125': OCRImage(
+    //     id: '123',
+    //     imageURL:
+    //         'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+    //     stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+    //     createdAt: DateTime.now()),
+    // '126': OCRImage(
+    //     id: '123',
+    //     imageURL:
+    //         'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+    //     stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+    //     createdAt: DateTime.now()),
+    // '127': OCRImage(
+    //     id: '123',
+    //     imageURL:
+    //         'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+    //     stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+    //     createdAt: DateTime.now()),
+    // '128': OCRImage(
+    //     id: '123',
+    //     imageURL:
+    //         'https://otakimail.co.nz/wp-content/uploads/2014/06/JN14_Vet_Obese-cat.jpg',
+    //     stringBlocks: [StringBlock(id: '1234', text: 'hello there')],
+    //     createdAt: DateTime.now()),
   };
 
   OCRImage _selectedImage;
@@ -71,8 +71,10 @@ class OCRImages with ChangeNotifier {
     notifyListeners();
   }
 
-  void addImage(OCRImage ocrImage) {
-    _images[ocrImage.id] = ocrImage;
+  void addImages(List<OCRImage> ocrImages) {
+    ocrImages.forEach((ocrImage) {
+      _images[ocrImage.id] = ocrImage;
+    });
     notifyListeners();
   }
 

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "359516898533",
+    "firebase_url": "https://vc-cam-31593.firebaseio.com",
+    "project_id": "vc-cam-31593",
+    "storage_bucket": "vc-cam-31593.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359516898533:android:f35f2ca96c13b35ecec00c",
+        "android_client_info": {
+          "package_name": "com.bmacpherson.vc_cam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359516898533-4fj8d48u5mg2mrj4qs55ompj92oeul2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8n7V3uD_RDJMC_tEEjPLGobM3LQput1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "359516898533-4fj8d48u5mg2mrj4qs55ompj92oeul2u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
