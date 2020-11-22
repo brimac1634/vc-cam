@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -18,26 +19,26 @@ class _MLImagePickerState extends State<MLImagePicker> {
     final picker = ImagePicker();
     final imageFile = await picker.getImage(source: imageSource);
     if (imageFile == null) return null;
-    // final visionImage = FirebaseVisionImage.fromFile(File(imageFile.path));
-    // final textRecognizer = FirebaseVision.instance.textRecognizer();
-    // final visionText = await textRecognizer.processImage(visionImage);
+    final visionImage = FirebaseVisionImage.fromFile(File(imageFile.path));
+    final textRecognizer = FirebaseVision.instance.textRecognizer();
+    final visionText = await textRecognizer.processImage(visionImage);
 
-    // String text = visionText.text;
-    // for (TextBlock block in visionText.blocks) {
-    //   final Rect boundingBox = block.boundingBox;
-    //   final List<Offset> cornerPoints = block.cornerPoints;
-    //   final String text = block.text;
-    //   final List<RecognizedLanguage> languages = block.recognizedLanguages;
+    String text = visionText.text;
+    for (TextBlock block in visionText.blocks) {
+      final Rect boundingBox = block.boundingBox;
+      final List<Offset> cornerPoints = block.cornerPoints;
+      final String text = block.text;
+      final List<RecognizedLanguage> languages = block.recognizedLanguages;
 
-    //   for (TextLine line in block.lines) {
-    //     print(line);
-    //     for (TextElement element in line.elements) {
-    //       print(element);
-    //     }
-    //   }
-    // }
+      for (TextLine line in block.lines) {
+        print(line.text);
+        // for (TextElement element in line.elements) {
+        //   print(element);
+        // }
+      }
+    }
 
-    // textRecognizer.close();
+    textRecognizer.close();
   }
 
   @override
@@ -63,7 +64,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
           ),
           onTap: () async {
             final image = await _getImage(ImageSource.camera);
-            print(image);
+            // print(image);
             // ocrImages.addImage(ocrImage)
           },
         ),
@@ -82,7 +83,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
               width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
           onTap: () async {
             final image = await _getImage(ImageSource.gallery);
-            print(image);
+            // print(image);
             // ocrImages.addImage(ocrImage)
           },
         ),

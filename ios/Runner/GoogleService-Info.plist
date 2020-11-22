@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>359516898533-dh1afpt5ho1h84287asg7d10bn1356ra.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.359516898533-dh1afpt5ho1h84287asg7d10bn1356ra</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDceDBgFEOVcV5F1jNh4V42K3ib-QfPgsQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>359516898533</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.bmacpherson.vcCam</string>
+	<key>PROJECT_ID</key>
+	<string>vc-cam-31593</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vc-cam-31593.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:359516898533:ios:f8ad81106c1eb420cec00c</string>
+	<key>DATABASE_URL</key>
+	<string>https://vc-cam-31593.firebaseio.com</string>
+</dict>
+</plist>
