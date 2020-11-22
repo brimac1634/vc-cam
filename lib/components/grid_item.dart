@@ -3,7 +3,7 @@ import 'package:vc_cam/models/ocr_image.dart';
 
 import '../models/ocr_image.dart';
 
-import '../utils/bounding_box_painter.dart';
+import '../utils/rect_painter.dart';
 
 import '../vc_app_theme.dart';
 

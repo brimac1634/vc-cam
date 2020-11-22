@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../components/top_bar.dart';
+import '../components/display_image.dart';
 
 import '../providers/ocr_images.dart';
 
@@ -26,8 +27,16 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
       backgroundColor: VCAppTheme.background,
       body: Stack(children: [
         Center(
-          child: Text(_selectedImage.stringBlocks.first.text),
-        ),
+            child: DisplayImage(
+          ocrImage: _selectedImage,
+        )
+            //     Image.asset(
+            //   _selectedImage.imageURL,
+            //   fit: BoxFit.contain,
+            //   width: double.infinity,
+            //   height: double.infinity,
+            // )
+            ),
         TopBar(
           topBarOpacity: 1.0,
           animationController: animationController,
