@@ -1,12 +1,17 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import './custom_bottom_sheet.dart';
 
 import '../utils/rect_painter.dart';
 
 import '../models/string_block.dart';
-
 import '../models/ocr_image.dart';
+import '../providers/ocr_images.dart';
+
+import '../vc_app_theme.dart';
 
 class DisplayImage extends StatefulWidget {
   final OCRImage ocrImage;
@@ -18,7 +23,62 @@ class DisplayImage extends StatefulWidget {
 }
 
 class _DisplayImageState extends State<DisplayImage> {
-  StringBlock _selectedBlock;
+  TextEditingController _editController;
+  int _selectedBlockIndex;
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (BuildContext bc) {
+          return CustomBottomSheet(
+              child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              child: Column(
+                children: [
+                  Text(
+                    widget.ocrImage.stringBlocks[_selectedBlockIndex].text,
+                    style: VCAppTheme.title,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Text Edit'),
+                    controller: _editController = TextEditingController()
+                      ..text = widget.ocrImage.stringBlocks[_selectedBlockIndex]
+                          .editedText,
+                    onSubmitted: (_) {
+                      final _updatedStringBlock = StringBlock(
+                          id: widget
+                              .ocrImage.stringBlocks[_selectedBlockIndex].id,
+                          text: widget
+                              .ocrImage.stringBlocks[_selectedBlockIndex].text,
+                          boundingBox: widget.ocrImage
+                              .stringBlocks[_selectedBlockIndex].boundingBox,
+                          editedText: _editController.text);
+
+                      List<StringBlock> _stringBlocks = [
+                        ...widget.ocrImage.stringBlocks
+                      ];
+
+                      _stringBlocks[_selectedBlockIndex] = _updatedStringBlock;
+
+                      Provider.of<OCRImages>(context).updateImage(
+                          widget.ocrImage.id,
+                          OCRImage(
+                              id: widget.ocrImage.id,
+                              imageURL: widget.ocrImage.imageURL,
+                              stringBlocks: _stringBlocks,
+                              createdAt: widget.ocrImage.createdAt,
+                              editedAt: DateTime.now()));
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ));
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +90,13 @@ class _DisplayImageState extends State<DisplayImage> {
           final offset = box.globalToLocal(details.globalPosition);
           final index = rects.lastIndexWhere((rect) => rect.contains(offset));
           if (index != -1) {
-            print('direct hit');
             setState(() {
-              _selectedBlock = widget.ocrImage.stringBlocks[index];
+              _selectedBlockIndex = index;
             });
+            _settingModalBottomSheet(context);
           } else {
             setState(() {
-              _selectedBlock = null;
+              _selectedBlockIndex = null;
             });
           }
         },

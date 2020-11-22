@@ -56,7 +56,7 @@ class VCAppTheme {
   static const TextStyle title = TextStyle(
     fontFamily: fontName,
     fontWeight: FontWeight.bold,
-    fontSize: 16,
+    fontSize: 18,
     letterSpacing: 0.18,
     color: darkerText,
   );

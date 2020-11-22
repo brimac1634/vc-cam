@@ -98,56 +98,54 @@ class _MLImagePickerState extends State<MLImagePicker> {
   @override
   Widget build(BuildContext context) {
     final ocrImagesProvider = Provider.of<OCRImages>(context);
-    return SafeArea(
-      child: Column(
-        children: [
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-            title: Text(
-              'Camera',
-              style: TextStyle(
-                fontFamily: VCAppTheme.fontName,
-                fontWeight: FontWeight.normal,
-                fontSize: 20,
-                color: VCAppTheme.darkerText,
-              ),
+    return Column(
+      children: [
+        ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+          title: Text(
+            'Camera',
+            style: TextStyle(
+              fontFamily: VCAppTheme.fontName,
+              fontWeight: FontWeight.normal,
+              fontSize: 20,
+              color: VCAppTheme.darkerText,
             ),
-            trailing: Image.asset(
-              'assets/shoot.png',
-              width: VCAppTheme.iconWidth,
-              height: VCAppTheme.iconHeight,
-            ),
-            onTap: () async {
-              final ocrImages = await _pickAndAnalyzeImages(isCamera: true);
-              if (ocrImages != null && ocrImages.length >= 1) {
-                ocrImagesProvider.addImages(ocrImages);
-              }
-              Navigator.pop(context);
-            },
           ),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-            title: Text(
-              'Gallery',
-              style: TextStyle(
-                fontFamily: VCAppTheme.fontName,
-                fontWeight: FontWeight.normal,
-                fontSize: 20,
-                color: VCAppTheme.darkerText,
-              ),
-            ),
-            trailing: Image.asset('assets/gallery.png',
-                width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
-            onTap: () async {
-              final ocrImages = await _pickAndAnalyzeImages(isCamera: false);
-              if (ocrImages != null && ocrImages.length >= 1) {
-                ocrImagesProvider.addImages(ocrImages);
-              }
-              Navigator.pop(context);
-            },
+          trailing: Image.asset(
+            'assets/shoot.png',
+            width: VCAppTheme.iconWidth,
+            height: VCAppTheme.iconHeight,
           ),
-        ],
-      ),
+          onTap: () async {
+            final ocrImages = await _pickAndAnalyzeImages(isCamera: true);
+            if (ocrImages != null && ocrImages.length >= 1) {
+              ocrImagesProvider.addImages(ocrImages);
+            }
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+          title: Text(
+            'Gallery',
+            style: TextStyle(
+              fontFamily: VCAppTheme.fontName,
+              fontWeight: FontWeight.normal,
+              fontSize: 20,
+              color: VCAppTheme.darkerText,
+            ),
+          ),
+          trailing: Image.asset('assets/gallery.png',
+              width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
+          onTap: () async {
+            final ocrImages = await _pickAndAnalyzeImages(isCamera: false);
+            if (ocrImages != null && ocrImages.length >= 1) {
+              ocrImagesProvider.addImages(ocrImages);
+            }
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

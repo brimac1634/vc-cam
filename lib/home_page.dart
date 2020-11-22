@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import './pages/ocr_images_page.dart';
-import './pages/image_details_page.dart';
 
 import './components/bottom_bar_view.dart';
 import './components/ml_image_picker.dart';
+import './components/custom_bottom_sheet.dart';
 
 import 'vc_app_theme.dart';
 
@@ -40,16 +40,7 @@ class _HomePageState extends State<HomePage>
         context: context,
         backgroundColor: Colors.transparent,
         builder: (BuildContext bc) {
-          return Wrap(children: [
-            Container(
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                    color: VCAppTheme.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: VCAppTheme.borderRadius,
-                        topRight: VCAppTheme.borderRadius)),
-                child: MLImagePicker()),
-          ]);
+          return CustomBottomSheet(child: MLImagePicker());
         });
   }
 

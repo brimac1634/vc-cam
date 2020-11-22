@@ -131,7 +131,7 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                         : Center(
                             child: Text(
                               'Press the plus button below to begin',
-                              style: VCAppTheme.body1,
+                              style: VCAppTheme.title,
                             ),
                           ));
               }
