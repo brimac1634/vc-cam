@@ -30,7 +30,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
       // );
 
       List<Asset> assetList = await MultiImagePicker.pickImages(
-        maxImages: 1,
+        maxImages: 10,
         enableCamera: true,
         materialOptions: MaterialOptions(
           actionBarColor: "#FF000000",
@@ -107,7 +107,9 @@ class _MLImagePickerState extends State<MLImagePicker> {
             ),
             onTap: () async {
               final ocrImages = await _pickAndAnalyzeImages();
-              ocrImagesProvider.addImages(ocrImages);
+              if (ocrImages != null && ocrImages.length >= 1) {
+                ocrImagesProvider.addImages(ocrImages);
+              }
               Navigator.pop(context);
             },
           ),
@@ -126,7 +128,9 @@ class _MLImagePickerState extends State<MLImagePicker> {
                 width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
             onTap: () async {
               final ocrImages = await _pickAndAnalyzeImages();
-              ocrImagesProvider.addImages(ocrImages);
+              if (ocrImages != null && ocrImages.length >= 1) {
+                ocrImagesProvider.addImages(ocrImages);
+              }
               Navigator.pop(context);
             },
           ),
