@@ -3,6 +3,8 @@ import 'package:vc_cam/models/ocr_image.dart';
 
 import '../models/ocr_image.dart';
 
+import '../utils/bounding_box_painter.dart';
+
 import '../vc_app_theme.dart';
 
 class GridItem extends StatelessWidget {
@@ -34,9 +36,10 @@ class GridItem extends StatelessWidget {
                         blurRadius: 10.0),
                   ],
                 ),
-                child: Image.asset(
-                  ocrImage.imageURL,
-                  fit: BoxFit.cover,
+                child: CustomPaint(
+                  painter: BoundingBoxPainter(
+                      stringBlocks: ocrImage.stringBlocks,
+                      imageFile: ocrImage.imageURL),
                 )),
           ),
         );
