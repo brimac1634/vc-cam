@@ -22,26 +22,31 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
   Widget build(BuildContext context) {
     final animationController =
         ModalRoute.of(context).settings.arguments as AnimationController;
-    final _selectedImage = Provider.of<OCRImages>(context).selectedImage;
+    final _ocrImageProvider = Provider.of<OCRImages>(context);
     return Scaffold(
       backgroundColor: VCAppTheme.background,
       body: Stack(children: [
         Center(
             child: DisplayImage(
-          ocrImage: _selectedImage,
-        )
-            //     Image.asset(
-            //   _selectedImage.imageURL,
-            //   fit: BoxFit.contain,
-            //   width: double.infinity,
-            //   height: double.infinity,
-            // )
-            ),
+          ocrImage: _ocrImageProvider.selectedImage,
+        )),
         TopBar(
           topBarOpacity: 1.0,
           animationController: animationController,
           title: '',
           canGoBack: true,
+          child: IconButton(
+            icon: Image.asset(
+              'assets/delete.png',
+              width: VCAppTheme.iconWidth,
+              height: VCAppTheme.iconHeight,
+            ),
+            onPressed: () {
+              // TODO PRESENT MODAL ASKING IF SURE
+              _ocrImageProvider.deleteImage(_ocrImageProvider.selectedImage.id);
+              Navigator.of(context).pop();
+            },
+          ),
         ),
       ]),
     );

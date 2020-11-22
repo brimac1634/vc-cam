@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vc_cam/models/ocr_image.dart';
+
+import './display_image.dart';
 
 import '../models/ocr_image.dart';
 
@@ -36,16 +37,10 @@ class GridItem extends StatelessWidget {
                         blurRadius: 10.0),
                   ],
                 ),
-                child: Image.asset(
-                  ocrImage.imageURL,
-                  fit: BoxFit.cover,
-                )
-                // CustomPaint(
-                //   painter: BoundingBoxPainter(
-                //       stringBlocks: ocrImage.stringBlocks,
-                //       imageFile: ocrImage.imageURL),
-                // )
-                ),
+                child: DisplayImage(
+                  ocrImage: ocrImage,
+                  disableDefault: true,
+                )),
           ),
         );
       },

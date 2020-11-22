@@ -16,8 +16,8 @@ class RectPainter extends CustomPainter {
       canvas.drawRect(
           rect,
           Paint()
-            ..color = VCAppTheme.specialBlue
-            ..strokeWidth = 6.0
+            ..color = VCAppTheme.rectPink
+            ..strokeWidth = 3.0
             ..style = PaintingStyle.stroke);
     }
   }

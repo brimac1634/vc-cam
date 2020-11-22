@@ -117,7 +117,6 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                                   Navigator.of(context).pushNamed(
                                       ImageDetailsPage.pathName,
                                       arguments: widget.animationController);
-                                  // open image detail page
                                 },
                                 child: GridItem(
                                   animationController:

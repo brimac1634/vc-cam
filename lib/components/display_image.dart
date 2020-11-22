@@ -15,8 +15,9 @@ import '../vc_app_theme.dart';
 
 class DisplayImage extends StatefulWidget {
   final OCRImage ocrImage;
+  final bool disableDefault;
 
-  DisplayImage({@required this.ocrImage});
+  DisplayImage({@required this.ocrImage, this.disableDefault = false});
 
   @override
   _DisplayImageState createState() => _DisplayImageState();
@@ -84,32 +85,36 @@ class _DisplayImageState extends State<DisplayImage> {
   Widget build(BuildContext context) {
     final List<Rect> rects =
         widget.ocrImage.stringBlocks.map((block) => block.boundingBox).toList();
-    return GestureDetector(
-        onTapDown: (details) {
-          RenderBox box = context.findRenderObject();
-          final offset = box.globalToLocal(details.globalPosition);
-          final index = rects.lastIndexWhere((rect) => rect.contains(offset));
-          if (index != -1) {
-            setState(() {
-              _selectedBlockIndex = index;
-            });
-            _settingModalBottomSheet(context);
-          } else {
-            setState(() {
-              _selectedBlockIndex = null;
-            });
-          }
-        },
-        child: Stack(
-          children: [
-            Image.asset(
-              widget.ocrImage.imageURL,
-              fit: BoxFit.contain,
-            ),
-            CustomPaint(
-              painter: RectPainter(rects),
-            )
-          ],
-        ));
+    return IgnorePointer(
+      ignoring: widget.disableDefault,
+      child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTapDown: (details) {
+            RenderBox box = context.findRenderObject();
+            final offset = box.globalToLocal(details.globalPosition);
+            final index = rects.lastIndexWhere((rect) => rect.contains(offset));
+            if (index != -1) {
+              setState(() {
+                _selectedBlockIndex = index;
+              });
+              _settingModalBottomSheet(context);
+            } else {
+              setState(() {
+                _selectedBlockIndex = null;
+              });
+            }
+          },
+          child: Stack(
+            children: [
+              Image.asset(
+                widget.ocrImage.imageURL,
+                fit: BoxFit.contain,
+              ),
+              CustomPaint(
+                painter: RectPainter(rects),
+              )
+            ],
+          )),
+    );
   }
 }
