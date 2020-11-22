@@ -5,6 +5,7 @@ import '../components/top_bar.dart';
 import '../components/grid_item.dart';
 
 import '../providers/ocr_images.dart';
+import '../providers/page_index.dart';
 
 import '../vc_app_theme.dart';
 
@@ -62,7 +63,7 @@ class _OCRImagesPageState extends State<OCRImagesPage>
 
   @override
   Widget build(BuildContext context) {
-    final _images = Provider.of<OCRImages>(context).imagesArray;
+    final _imagesProvider = Provider.of<OCRImages>(context);
 
     return Container(
       color: VCAppTheme.background,
@@ -90,11 +91,12 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                           24,
                       bottom: 62 + MediaQuery.of(context).padding.bottom,
                     ),
-                    itemCount: _images.length,
+                    itemCount: _imagesProvider.imagesArray.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      final int count =
-                          _images.length > 10 ? 10 : _images.length;
+                      final int count = _imagesProvider.imagesArray.length > 10
+                          ? 10
+                          : _imagesProvider.imagesArray.length;
                       final Animation<double> _animation =
                           Tween<double>(begin: 0.0, end: 1.0).animate(
                               CurvedAnimation(
@@ -102,10 +104,18 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                                   curve: Interval((1 / count) * index, 1.0,
                                       curve: Curves.fastOutSlowIn)));
                       widget.animationController.forward();
-                      return GridItem(
-                        animationController: widget.animationController,
-                        animation: _animation,
-                        ocrImage: _images[index],
+                      return InkWell(
+                        onTap: () {
+                          _imagesProvider.selectImage(
+                              _imagesProvider.imagesArray[index].id);
+                          Provider.of<PageIndex>(context, listen: false)
+                              .setPageIndex(1);
+                        },
+                        child: GridItem(
+                          animationController: widget.animationController,
+                          animation: _animation,
+                          ocrImage: _imagesProvider.imagesArray[index],
+                        ),
                       );
                     },
                   ),

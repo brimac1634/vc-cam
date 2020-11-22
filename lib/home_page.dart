@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './pages/ocr_images_page.dart';
 import './pages/image_details_page.dart';
@@ -7,6 +8,7 @@ import './components/bottom_bar_view.dart';
 import './components/ml_image_picker.dart';
 
 import './models/tab_icon_data.dart';
+import './providers/page_index.dart';
 
 import 'vc_app_theme.dart';
 
@@ -18,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   AnimationController animationController;
+  int pageIndex = 0;
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
 
@@ -36,6 +39,32 @@ class _HomePageState extends State<HomePage>
         duration: const Duration(milliseconds: 600), vsync: this);
     tabBody = OCRImagesPage(animationController: animationController);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    final newIndex = Provider.of<PageIndex>(context).pageIndex;
+
+    if (pageIndex != newIndex) {
+      print(pageIndex != newIndex);
+      animationController.reverse().then<dynamic>((data) {
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          if (newIndex == 0) {
+            tabBody = OCRImagesPage(animationController: animationController);
+          } else if (newIndex == 1) {
+            tabBody =
+                ImageDetailsPage(animationController: animationController);
+          }
+
+          pageIndex = newIndex;
+        });
+      });
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -88,27 +117,8 @@ class _HomePageState extends State<HomePage>
                       _settingModalBottomSheet(context);
                     },
                     changeIndex: (int index) {
-                      if (index == 0) {
-                        animationController.reverse().then<dynamic>((data) {
-                          if (!mounted) {
-                            return;
-                          }
-                          setState(() {
-                            tabBody = OCRImagesPage(
-                                animationController: animationController);
-                          });
-                        });
-                      } else if (index == 1) {
-                        animationController.reverse().then<dynamic>((data) {
-                          if (!mounted) {
-                            return;
-                          }
-                          setState(() {
-                            tabBody = ImageDetailsPage(
-                                animationController: animationController);
-                          });
-                        });
-                      }
+                      Provider.of<PageIndex>(context, listen: false)
+                          .setPageIndex(index);
                     },
                   ),
                 ],
