@@ -36,11 +36,16 @@ class GridItem extends StatelessWidget {
                         blurRadius: 10.0),
                   ],
                 ),
-                child: CustomPaint(
-                  painter: BoundingBoxPainter(
-                      stringBlocks: ocrImage.stringBlocks,
-                      imageFile: ocrImage.imageURL),
-                )),
+                child: Image.asset(
+                  ocrImage.imageURL,
+                  fit: BoxFit.cover,
+                )
+                // CustomPaint(
+                //   painter: BoundingBoxPainter(
+                //       stringBlocks: ocrImage.stringBlocks,
+                //       imageFile: ocrImage.imageURL),
+                // )
+                ),
           ),
         );
       },

@@ -1,9 +1,10 @@
 import 'dart:io';
 
-// import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/ocr_images.dart';
@@ -18,44 +19,65 @@ class MLImagePicker extends StatefulWidget {
 }
 
 class _MLImagePickerState extends State<MLImagePicker> {
-  Future<OCRImage> _getImage() async {
+  Future<List<OCRImage>> _pickAndAnalyzeImages() async {
     try {
       // final picker = ImagePicker();
       // final imageFile = await picker.getImage(source: imageSource);
-      final imageList = await MultiImagePicker.pickImages(
-        maxImages: 2,
+
+      // final assetList = await MultiImagePicker.pickImages(
+      //   maxImages: 1,
+      //   // enableCamera: true,
+      // );
+
+      List<Asset> assetList = await MultiImagePicker.pickImages(
+        maxImages: 1,
         enableCamera: true,
+        materialOptions: MaterialOptions(
+          actionBarColor: "#FF000000",
+          statusBarColor: "#FF000000",
+        ),
       );
-      print(imageList);
-      // if (imageFile == null) return null;
-      // final visionImage = FirebaseVisionImage.fromFile(File(imageFile.path));
-      // final textRecognizer = FirebaseVision.instance.textRecognizer();
-      // final visionText = await textRecognizer.processImage(visionImage);
 
-      // List<StringBlock> stringBlocks = [];
-      // for (TextBlock block in visionText.blocks) {
-      //   final Rect boundingBox = block.boundingBox;
-      //   // final List<Offset> cornerPoints = block.cornerPoints;
-      //   final String text = block.text;
-      //   final List<RecognizedLanguage> languages = block.recognizedLanguages;
+      if (assetList == null || assetList.length <= 0) {
+        return null;
+      }
 
-      //   stringBlocks.add(
-      //       StringBlock(id: Uuid().v4(), text: text, boundingBox: boundingBox));
-      //   // for (TextLine line in block.lines) {
-      //   //   print(line.text);
-      //   //   // for (TextElement element in line.elements) {
-      //   //   //   print(element);
-      //   //   // }
-      //   // }
-      // }
+      final textRecognizer = FirebaseVision.instance.textRecognizer();
 
-      // textRecognizer.close();
+      List<OCRImage> ocrImages = [];
+      for (Asset asset in assetList) {
+        final filePath =
+            await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+        final visionImage = FirebaseVisionImage.fromFile(File(filePath));
+        final visionText = await textRecognizer.processImage(visionImage);
 
-      // return OCRImage(
-      //     id: Uuid().v4(),
-      //     imageURL: imageFile.path,
-      //     stringBlocks: stringBlocks,
-      //     createdAt: DateTime.now());
+        List<StringBlock> stringBlocks = [];
+        for (TextBlock block in visionText.blocks) {
+          final Rect boundingBox = block.boundingBox;
+          // final List<Offset> cornerPoints = block.cornerPoints;
+          final String text = block.text;
+          // final List<RecognizedLanguage> languages = block.recognizedLanguages;
+
+          stringBlocks.add(StringBlock(
+              id: Uuid().v4(), text: text, boundingBox: boundingBox));
+          // for (TextLine line in block.lines) {
+          //   print(line.text);
+          //   // for (TextElement element in line.elements) {
+          //   //   print(element);
+          //   // }
+          // }
+        }
+
+        ocrImages.add(OCRImage(
+            id: Uuid().v4(),
+            imageURL: filePath,
+            stringBlocks: stringBlocks,
+            createdAt: DateTime.now()));
+      }
+
+      textRecognizer.close();
+
+      return ocrImages;
     } on Exception catch (error) {
       print(error);
     }
@@ -63,7 +85,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final ocrImages = Provider.of<OCRImages>(context);
+    final ocrImagesProvider = Provider.of<OCRImages>(context);
     return SafeArea(
       child: Column(
         children: [
@@ -84,8 +106,8 @@ class _MLImagePickerState extends State<MLImagePicker> {
               height: VCAppTheme.iconHeight,
             ),
             onTap: () async {
-              final ocrImage = await _getImage();
-              ocrImages.addImage(ocrImage);
+              final ocrImages = await _pickAndAnalyzeImages();
+              ocrImagesProvider.addImages(ocrImages);
               Navigator.pop(context);
             },
           ),
@@ -103,8 +125,8 @@ class _MLImagePickerState extends State<MLImagePicker> {
             trailing: Image.asset('assets/import.png',
                 width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
             onTap: () async {
-              final ocrImage = await _getImage();
-              ocrImages.addImage(ocrImage);
+              final ocrImages = await _pickAndAnalyzeImages();
+              ocrImagesProvider.addImages(ocrImages);
               Navigator.pop(context);
             },
           ),
