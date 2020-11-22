@@ -5,14 +5,14 @@ import '../components/top_bar.dart';
 import '../components/grid_item.dart';
 
 import '../providers/ocr_images.dart';
-import '../providers/page_index.dart';
+// import '../providers/page_index.dart';
 
 import '../vc_app_theme.dart';
 
 class OCRImagesPage extends StatefulWidget {
   final AnimationController animationController;
 
-  OCRImagesPage({this.animationController});
+  OCRImagesPage({@required this.animationController});
 
   @override
   _OCRImagesPageState createState() => _OCRImagesPageState();
@@ -108,8 +108,7 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                         onTap: () {
                           _imagesProvider.selectImage(
                               _imagesProvider.imagesArray[index].id);
-                          Provider.of<PageIndex>(context, listen: false)
-                              .setPageIndex(1);
+                          // open image detail page
                         },
                         child: GridItem(
                           animationController: widget.animationController,

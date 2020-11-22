@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './providers/ocr_images.dart';
-import './providers/page_index.dart';
 
 import 'home_page.dart';
 
@@ -18,10 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (ctx) => OCRImages()),
-        ChangeNotifierProvider(create: (ctx) => PageIndex())
-      ],
+      providers: [ChangeNotifierProvider(create: (ctx) => OCRImages())],
       child: MaterialApp(
         title: 'VC Cam',
         theme: ThemeData(

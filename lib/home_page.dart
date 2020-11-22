@@ -8,7 +8,6 @@ import './components/bottom_bar_view.dart';
 import './components/ml_image_picker.dart';
 
 import './models/tab_icon_data.dart';
-import './providers/page_index.dart';
 
 import 'vc_app_theme.dart';
 
@@ -20,7 +19,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   AnimationController animationController;
-  int pageIndex = 0;
 
   List<TabIconData> tabIconsList = TabIconData.tabIconsList;
 
@@ -42,35 +40,24 @@ class _HomePageState extends State<HomePage>
   }
 
   @override
-  void didChangeDependencies() {
-    final newIndex = Provider.of<PageIndex>(context).pageIndex;
-
-    if (pageIndex != newIndex) {
-      print(pageIndex != newIndex);
-      animationController.reverse().then<dynamic>((data) {
-        if (!mounted) {
-          return;
-        }
-        setState(() {
-          if (newIndex == 0) {
-            tabBody = OCRImagesPage(animationController: animationController);
-          } else if (newIndex == 1) {
-            tabBody =
-                ImageDetailsPage(animationController: animationController);
-          }
-
-          pageIndex = newIndex;
-        });
-      });
-    }
-
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
     animationController.dispose();
     super.dispose();
+  }
+
+  void _setPageIndex(int index) {
+    animationController.reverse().then<dynamic>((data) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        if (index == 0) {
+          tabBody = OCRImagesPage(animationController: animationController);
+        } else if (index == 1) {
+          tabBody = ImageDetailsPage(animationController: animationController);
+        }
+      });
+    });
   }
 
   Future<bool> getData() async {
@@ -117,8 +104,7 @@ class _HomePageState extends State<HomePage>
                       _settingModalBottomSheet(context);
                     },
                     changeIndex: (int index) {
-                      Provider.of<PageIndex>(context, listen: false)
-                          .setPageIndex(index);
+                      _setPageIndex(index);
                     },
                   ),
                 ],
