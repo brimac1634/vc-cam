@@ -37,25 +37,28 @@ class _DisplayImageState extends State<DisplayImage> {
   }
 
   void _submit(BuildContext context) {
-    final _updatedStringBlock = StringBlock(
-        id: widget.ocrImage.stringBlocks[_selectedBlockIndex].id,
-        text: widget.ocrImage.stringBlocks[_selectedBlockIndex].text,
-        boundingBox:
-            widget.ocrImage.stringBlocks[_selectedBlockIndex].boundingBox,
-        editedText: _editController.text);
+    if (_editController.text !=
+        widget.ocrImage.stringBlocks[_selectedBlockIndex].editedText) {
+      final _updatedStringBlock = StringBlock(
+          id: widget.ocrImage.stringBlocks[_selectedBlockIndex].id,
+          text: widget.ocrImage.stringBlocks[_selectedBlockIndex].text,
+          boundingBox:
+              widget.ocrImage.stringBlocks[_selectedBlockIndex].boundingBox,
+          editedText: _editController.text);
 
-    List<StringBlock> _stringBlocks = [...widget.ocrImage.stringBlocks];
+      List<StringBlock> _stringBlocks = [...widget.ocrImage.stringBlocks];
 
-    _stringBlocks[_selectedBlockIndex] = _updatedStringBlock;
+      _stringBlocks[_selectedBlockIndex] = _updatedStringBlock;
 
-    Provider.of<OCRImages>(context, listen: false).updateImage(
-        widget.ocrImage.id,
-        OCRImage(
-            id: widget.ocrImage.id,
-            imageURL: widget.ocrImage.imageURL,
-            stringBlocks: _stringBlocks,
-            createdAt: widget.ocrImage.createdAt,
-            editedAt: DateTime.now()));
+      Provider.of<OCRImages>(context, listen: false).updateImage(
+          widget.ocrImage.id,
+          OCRImage(
+              id: widget.ocrImage.id,
+              imageURL: widget.ocrImage.imageURL,
+              stringBlocks: _stringBlocks,
+              createdAt: widget.ocrImage.createdAt,
+              editedAt: DateTime.now()));
+    }
 
     setState(() {
       _selectedBlockIndex = null;
@@ -193,6 +196,7 @@ class _DisplayImageState extends State<DisplayImage> {
       setState(() {
         _selectedBlockIndex = null;
       });
+      _editController.clear();
     }).catchError((onError) {
       print(onError.toString());
     });
