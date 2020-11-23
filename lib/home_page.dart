@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vc_cam/providers/ocr_images.dart';
 
 import './pages/ocr_images_page.dart';
+import './pages/image_details_page.dart';
 
 import './widgets/bottom_bar_view.dart';
 import './widgets/ml_image_picker.dart';
 import './widgets/custom_bottom_sheet.dart';
+
+import './models/ocr_image.dart';
 
 import 'vc_app_theme.dart';
 
@@ -36,22 +41,32 @@ class _HomePageState extends State<HomePage>
     return true;
   }
 
-  void _settingModalBottomSheet(context) {
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        builder: (BuildContext bc) {
-          return CustomBottomSheet(child: MLImagePicker((bool isLoading) {
-            setState(() {
-              _isLoading = isLoading;
-            });
-          }));
-        }).then((_) {
+  void _settingModalBottomSheet(context) async {
+    try {
+      List<OCRImage> imageList = await showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          builder: (BuildContext bc) {
+            return CustomBottomSheet(child: MLImagePicker((bool isLoading) {
+              setState(() {
+                _isLoading = isLoading;
+              });
+            }));
+          });
       setState(() {
         _isLoading = false;
       });
-    });
+
+      if (imageList.length == 1) {
+        Provider.of<OCRImages>(context, listen: false)
+            .selectImage(imageList.first.id);
+        Navigator.of(context).pushNamed(ImageDetailsPage.pathName,
+            arguments: animationController);
+      }
+    } catch (error) {
+      print(error.toString());
+    }
   }
 
   @override

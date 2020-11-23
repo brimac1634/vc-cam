@@ -126,7 +126,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
           if (ocrImages != null && ocrImages.length >= 1) {
             ocrImagesProvider.addImages(ocrImages);
           }
-          Navigator.pop(context);
+          Navigator.pop(context, ocrImages);
         },
       ),
       ListTile(
@@ -147,7 +147,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
           if (ocrImages != null && ocrImages.length >= 1) {
             ocrImagesProvider.addImages(ocrImages);
           }
-          Navigator.pop(context);
+          Navigator.pop(context, ocrImages);
         },
       ),
     ]);

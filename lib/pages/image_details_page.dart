@@ -27,9 +27,10 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
     return Scaffold(
       backgroundColor: VCAppTheme.background,
       body: Stack(children: [
-        DisplayImage(
-          ocrImage: _ocrImageProvider.selectedImage,
-        ),
+        if (_ocrImageProvider.selectedImage != null)
+          DisplayImage(
+            ocrImage: _ocrImageProvider.selectedImage,
+          ),
         TopBar(
           topBarOpacity: 1.0,
           animationController: animationController,
