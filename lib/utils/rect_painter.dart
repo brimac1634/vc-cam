@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../models/string_block.dart';
@@ -6,12 +8,15 @@ import '../vc_app_theme.dart';
 
 class RectPainter extends CustomPainter {
   final List<Rect> rects;
+  final ui.Image image;
   // final int selectedIndex;
 
-  RectPainter(this.rects);
+  RectPainter({@required this.rects, @required this.image});
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.drawImage(image, Offset.zero, Paint());
+
     for (Rect rect in rects) {
       canvas.drawRect(
           rect,

@@ -15,6 +15,10 @@ import '../models/string_block.dart';
 import '../vc_app_theme.dart';
 
 class MLImagePicker extends StatefulWidget {
+  final Function(bool) setIsLoading;
+
+  MLImagePicker(this.setIsLoading);
+
   @override
   _MLImagePickerState createState() => _MLImagePickerState();
 }
@@ -30,6 +34,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
         final picker = ImagePicker();
         final imageFile = await picker.getImage(source: ImageSource.camera);
         if (imageFile != null) {
+          widget.setIsLoading(true);
           final ocrImage = await analyzeImage(imageFile.path, textRecognizer);
           if (ocrImage != null) {
             ocrImages.add(ocrImage);
@@ -46,6 +51,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
         );
 
         if (assetList != null && assetList.length >= 1) {
+          widget.setIsLoading(true);
           for (Asset asset in assetList) {
             final filePath =
                 await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
@@ -98,54 +104,52 @@ class _MLImagePickerState extends State<MLImagePicker> {
   @override
   Widget build(BuildContext context) {
     final ocrImagesProvider = Provider.of<OCRImages>(context);
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-          title: Text(
-            'Camera',
-            style: TextStyle(
-              fontFamily: VCAppTheme.fontName,
-              fontWeight: FontWeight.normal,
-              fontSize: 20,
-              color: VCAppTheme.darkerText,
-            ),
+    return Column(children: [
+      ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+        title: Text(
+          'Camera',
+          style: TextStyle(
+            fontFamily: VCAppTheme.fontName,
+            fontWeight: FontWeight.normal,
+            fontSize: 20,
+            color: VCAppTheme.darkerText,
           ),
-          trailing: Image.asset(
-            'assets/shoot.png',
-            width: VCAppTheme.iconWidth,
-            height: VCAppTheme.iconHeight,
-          ),
-          onTap: () async {
-            final ocrImages = await _pickAndAnalyzeImages(isCamera: true);
-            if (ocrImages != null && ocrImages.length >= 1) {
-              ocrImagesProvider.addImages(ocrImages);
-            }
-            Navigator.pop(context);
-          },
         ),
-        ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
-          title: Text(
-            'Gallery',
-            style: TextStyle(
-              fontFamily: VCAppTheme.fontName,
-              fontWeight: FontWeight.normal,
-              fontSize: 20,
-              color: VCAppTheme.darkerText,
-            ),
-          ),
-          trailing: Image.asset('assets/gallery.png',
-              width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
-          onTap: () async {
-            final ocrImages = await _pickAndAnalyzeImages(isCamera: false);
-            if (ocrImages != null && ocrImages.length >= 1) {
-              ocrImagesProvider.addImages(ocrImages);
-            }
-            Navigator.pop(context);
-          },
+        trailing: Image.asset(
+          'assets/shoot.png',
+          width: VCAppTheme.iconWidth,
+          height: VCAppTheme.iconHeight,
         ),
-      ],
-    );
+        onTap: () async {
+          final ocrImages = await _pickAndAnalyzeImages(isCamera: true);
+          if (ocrImages != null && ocrImages.length >= 1) {
+            ocrImagesProvider.addImages(ocrImages);
+          }
+          Navigator.pop(context);
+        },
+      ),
+      ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 5),
+        title: Text(
+          'Gallery',
+          style: TextStyle(
+            fontFamily: VCAppTheme.fontName,
+            fontWeight: FontWeight.normal,
+            fontSize: 20,
+            color: VCAppTheme.darkerText,
+          ),
+        ),
+        trailing: Image.asset('assets/gallery.png',
+            width: VCAppTheme.iconWidth, height: VCAppTheme.iconHeight),
+        onTap: () async {
+          final ocrImages = await _pickAndAnalyzeImages(isCamera: false);
+          if (ocrImages != null && ocrImages.length >= 1) {
+            ocrImagesProvider.addImages(ocrImages);
+          }
+          Navigator.pop(context);
+        },
+      ),
+    ]);
   }
 }

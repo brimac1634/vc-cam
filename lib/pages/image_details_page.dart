@@ -26,10 +26,9 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
     return Scaffold(
       backgroundColor: VCAppTheme.background,
       body: Stack(children: [
-        Center(
-            child: DisplayImage(
+        DisplayImage(
           ocrImage: _ocrImageProvider.selectedImage,
-        )),
+        ),
         TopBar(
           topBarOpacity: 1.0,
           animationController: animationController,
@@ -37,7 +36,7 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
           canGoBack: true,
           child: IconButton(
             icon: Image.asset(
-              'assets/delete.png',
+              'assets/trash.png',
               width: VCAppTheme.iconWidth,
               height: VCAppTheme.iconHeight,
             ),

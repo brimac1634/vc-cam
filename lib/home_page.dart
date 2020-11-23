@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   AnimationController animationController;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -40,8 +41,16 @@ class _HomePageState extends State<HomePage>
         context: context,
         backgroundColor: Colors.transparent,
         builder: (BuildContext bc) {
-          return CustomBottomSheet(child: MLImagePicker());
-        });
+          return CustomBottomSheet(child: MLImagePicker((bool isLoading) {
+            setState(() {
+              _isLoading = isLoading;
+            });
+          }));
+        }).then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -64,6 +73,7 @@ class _HomePageState extends State<HomePage>
                       _settingModalBottomSheet(context);
                     },
                   ),
+                  if (_isLoading) Center(child: CircularProgressIndicator())
                 ],
               );
             }
