@@ -37,13 +37,13 @@ class _DisplayImageState extends State<DisplayImage> {
   }
 
   void _submit(BuildContext context) {
-    if (_editController.text !=
-        widget.ocrImage.stringBlocks[_selectedBlockIndex].editedText) {
+    final _selectedBlock = widget.ocrImage.stringBlocks[_selectedBlockIndex];
+    if (_editController.text != _selectedBlock.editedText &&
+        _editController.text != _selectedBlock.text) {
       final _updatedStringBlock = StringBlock(
-          id: widget.ocrImage.stringBlocks[_selectedBlockIndex].id,
-          text: widget.ocrImage.stringBlocks[_selectedBlockIndex].text,
-          boundingBox:
-              widget.ocrImage.stringBlocks[_selectedBlockIndex].boundingBox,
+          id: _selectedBlock.id,
+          text: _selectedBlock.text,
+          boundingBox: _selectedBlock.boundingBox,
           editedText: _editController.text);
 
       List<StringBlock> _stringBlocks = [...widget.ocrImage.stringBlocks];
@@ -85,7 +85,7 @@ class _DisplayImageState extends State<DisplayImage> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 18),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Padding(
@@ -96,35 +96,12 @@ class _DisplayImageState extends State<DisplayImage> {
                                   ),
                                 ),
                                 Flexible(
-                                  child: TextField(
-                                    enabled: false,
-                                    cursorColor: VCAppTheme.specialBlue,
-                                    style: VCAppTheme.title,
-                                    controller: _originalController
-                                      ..text = widget
-                                          .ocrImage
-                                          .stringBlocks[_selectedBlockIndex]
-                                          .text,
-                                    decoration: InputDecoration(
-                                        focusColor: VCAppTheme.specialBlue,
-                                        hoverColor: VCAppTheme.specialBlue,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: VCAppTheme.dark_grey),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: VCAppTheme.specialBlue),
-                                        ),
-                                        border: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: VCAppTheme.dark_grey),
-                                        ),
-                                        disabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: VCAppTheme.dark_grey))),
-                                  ),
-                                )
+                                    child: Text(
+                                  widget.ocrImage
+                                      .stringBlocks[_selectedBlockIndex].text,
+                                  style: VCAppTheme.title,
+                                  textAlign: TextAlign.left,
+                                ))
                               ],
                             ),
                           ),
@@ -146,6 +123,7 @@ class _DisplayImageState extends State<DisplayImage> {
                                     child: TextField(
                                       cursorColor: VCAppTheme.specialBlue,
                                       style: VCAppTheme.title,
+                                      maxLines: null,
                                       decoration: InputDecoration(
                                         focusColor: VCAppTheme.specialBlue,
                                         hoverColor: VCAppTheme.specialBlue,
@@ -169,7 +147,11 @@ class _DisplayImageState extends State<DisplayImage> {
                                                 .stringBlocks[
                                                     _selectedBlockIndex]
                                                 .editedText ??
-                                            '',
+                                            widget
+                                                .ocrImage
+                                                .stringBlocks[
+                                                    _selectedBlockIndex]
+                                                .text,
                                       onSubmitted: (_) => _submit(context),
                                     ),
                                   ),
