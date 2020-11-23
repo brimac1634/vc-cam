@@ -198,6 +198,11 @@ class _DisplayImageState extends State<DisplayImage> {
         builder: (context, snapshot) {
           final ui.Image _loadedImage = snapshot.data;
 
+          if (_loadedImage == null)
+            return Container(
+              color: VCAppTheme.white,
+            );
+
           final changeInSize = (MediaQuery.of(context).size.width /
               (_loadedImage.width.toDouble() ?? 1));
 

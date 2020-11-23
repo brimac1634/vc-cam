@@ -167,7 +167,7 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                         height: VCAppTheme.iconHeight,
                       ),
                       onPressed: () {
-                        if (!_isEditing || _selectedItems.length >= 1) return;
+                        if (!_isEditing || _selectedItems.length <= 0) return;
                         showDialog(
                             context: context,
                             builder: (context) {
