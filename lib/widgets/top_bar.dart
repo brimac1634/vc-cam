@@ -8,13 +8,15 @@ class TopBar extends StatefulWidget {
   final String title;
   final Widget child;
   final bool canGoBack;
+  final Function onBack;
 
   TopBar(
       {@required this.topBarOpacity,
       @required this.animationController,
       @required this.title,
       this.child,
-      this.canGoBack = false});
+      this.canGoBack = false,
+      @required this.onBack});
 
   @override
   _TopBarState createState() => _TopBarState();
@@ -81,6 +83,7 @@ class _TopBarState extends State<TopBar> with TickerProviderStateMixin {
                                       height: VCAppTheme.iconHeight,
                                     ),
                                     onPressed: () {
+                                      widget.onBack();
                                       Navigator.of(context).pop();
                                     }),
                               Expanded(

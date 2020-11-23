@@ -37,6 +37,11 @@ class OCRImages with ChangeNotifier {
     notifyListeners();
   }
 
+  void unselectImage() {
+    _selectedImage = null;
+    notifyListeners();
+  }
+
   void addImages(List<OCRImage> ocrImages) {
     ocrImages.forEach((ocrImage) {
       _images[ocrImage.id] = ocrImage;
