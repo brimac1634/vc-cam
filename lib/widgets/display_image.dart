@@ -73,111 +73,121 @@ class _DisplayImageState extends State<DisplayImage> {
               child: SizedBox(
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 14),
-                          child: Text(
-                            'Original:',
-                            style: VCAppTheme.body1,
-                          ),
-                        ),
-                        Flexible(
-                          child: TextField(
-                            enabled: false,
-                            cursorColor: VCAppTheme.specialBlue,
-                            style: VCAppTheme.title,
-                            controller: _originalController
-                              ..text = widget.ocrImage
-                                  .stringBlocks[_selectedBlockIndex].text,
-                            decoration: InputDecoration(
-                                focusColor: VCAppTheme.specialBlue,
-                                hoverColor: VCAppTheme.specialBlue,
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: VCAppTheme.dark_grey),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: VCAppTheme.specialBlue),
-                                ),
-                                border: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: VCAppTheme.dark_grey),
-                                ),
-                                disabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: VCAppTheme.dark_grey))),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 18),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                child: _selectedBlockIndex != null
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(right: 22),
-                            child: Text(
-                              'Edited:',
-                              style: VCAppTheme.body1,
+                            padding: const EdgeInsets.only(bottom: 18),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 14),
+                                  child: Text(
+                                    'Original:',
+                                    style: VCAppTheme.body1,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: TextField(
+                                    enabled: false,
+                                    cursorColor: VCAppTheme.specialBlue,
+                                    style: VCAppTheme.title,
+                                    controller: _originalController
+                                      ..text = widget
+                                          .ocrImage
+                                          .stringBlocks[_selectedBlockIndex]
+                                          .text,
+                                    decoration: InputDecoration(
+                                        focusColor: VCAppTheme.specialBlue,
+                                        hoverColor: VCAppTheme.specialBlue,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: VCAppTheme.dark_grey),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: VCAppTheme.specialBlue),
+                                        ),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: VCAppTheme.dark_grey),
+                                        ),
+                                        disabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: VCAppTheme.dark_grey))),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          Flexible(
-                            child: TextField(
-                              cursorColor: VCAppTheme.specialBlue,
-                              style: VCAppTheme.title,
-                              decoration: InputDecoration(
-                                focusColor: VCAppTheme.specialBlue,
-                                hoverColor: VCAppTheme.specialBlue,
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: VCAppTheme.dark_grey),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: VCAppTheme.dark_grey),
-                                ),
-                                border: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: VCAppTheme.dark_grey),
-                                ),
-                              ),
-                              textInputAction: TextInputAction.done,
-                              controller: _editController
-                                ..text = widget
-                                    .ocrImage
-                                    .stringBlocks[_selectedBlockIndex]
-                                    .editedText,
-                              onSubmitted: (_) => _submit(context),
-                            ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 18),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 22),
+                                    child: Text(
+                                      'Edited:',
+                                      style: VCAppTheme.body1,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: TextField(
+                                      cursorColor: VCAppTheme.specialBlue,
+                                      style: VCAppTheme.title,
+                                      decoration: InputDecoration(
+                                        focusColor: VCAppTheme.specialBlue,
+                                        hoverColor: VCAppTheme.specialBlue,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: VCAppTheme.dark_grey),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: VCAppTheme.dark_grey),
+                                        ),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: VCAppTheme.dark_grey),
+                                        ),
+                                      ),
+                                      textInputAction: TextInputAction.done,
+                                      controller: _editController
+                                        ..text = widget
+                                                .ocrImage
+                                                .stringBlocks[
+                                                    _selectedBlockIndex]
+                                                .editedText ??
+                                            '',
+                                      onSubmitted: (_) => _submit(context),
+                                    ),
+                                  ),
+                                ]),
                           ),
-                        ]),
-                  ),
-                  Row(
-                    children: [
-                      Spacer(),
-                      FlatButton(
-                          onPressed: () {
-                            _submit(context);
-                          },
-                          child: Text('Save', style: VCAppTheme.flatButton))
-                    ],
-                  )
-                ],
-              ),
-            ),
+                          Row(
+                            children: [
+                              Spacer(),
+                              FlatButton(
+                                  onPressed: () {
+                                    _submit(context);
+                                  },
+                                  child: Text('Save',
+                                      style: VCAppTheme.flatButton))
+                            ],
+                          )
+                        ],
+                      )
+                    : Container(
+                        color: VCAppTheme.white,
+                      )),
           ));
         }).then((_) {
       setState(() {
