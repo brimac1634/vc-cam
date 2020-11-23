@@ -11,11 +11,13 @@ class RectPainter extends CustomPainter {
   final ui.Image image;
   // final int selectedIndex;
 
-  RectPainter({@required this.rects, @required this.image});
+  RectPainter({@required this.rects, this.image});
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawImage(image, Offset.zero, Paint());
+    if (image != null) {
+      canvas.drawImage(image, Offset.zero, Paint());
+    }
 
     for (Rect rect in rects) {
       canvas.drawRect(
@@ -32,32 +34,3 @@ class RectPainter extends CustomPainter {
     return true;
   }
 }
-
-// class BoundingBoxPainter extends CustomPainter {
-//   List<StringBlock> stringBlocks;
-//   var imageFile;
-
-//   BoundingBoxPainter({@required this.stringBlocks, @required this.imageFile});
-
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     if (imageFile != null) {
-//       canvas.drawImage(imageFile, Offset.zero, Paint());
-//     }
-
-//     for (StringBlock block in stringBlocks) {
-//       canvas.drawRect(
-//         block.boundingBox,
-//         Paint()
-//           ..color = Colors.teal
-//           ..strokeWidth = 6.0
-//           ..style = PaintingStyle.stroke,
-//       );
-//     }
-//   }
-
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) {
-//     return true;
-//   }
-// }

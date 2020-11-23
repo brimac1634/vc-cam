@@ -48,14 +48,13 @@ class GridItem extends StatelessWidget {
                 child: Stack(
                   children: [
                     AnimatedOpacity(
-                      opacity: isSelecting ? 0.7 : 1.0,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.easeOutSine,
-                      child: DisplayImage(
-                        ocrImage: ocrImage,
-                        disableDefault: true,
-                      ),
-                    ),
+                        opacity: isSelecting ? 0.7 : 1.0,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeOutSine,
+                        child: Image.asset(
+                          ocrImage.imageURL,
+                          fit: BoxFit.fill,
+                        )),
                     Positioned(
                       top: 0,
                       right: 0,
