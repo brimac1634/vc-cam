@@ -36,6 +36,11 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
           animationController: animationController,
           title: '',
           canGoBack: true,
+          onBack: () {
+            _ocrImageProvider.selectedImage.stringBlocks.removeWhere(
+                (block) => block.isUserCreated && block.editedText == null);
+            _ocrImageProvider.unselectImage();
+          },
           child: IconButton(
             icon: Image.asset(
               'assets/trash.png',

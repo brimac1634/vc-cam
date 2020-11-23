@@ -40,7 +40,8 @@ class _TextBlockEditorState extends State<TextBlockEditor> {
           id: _selectedBlock.id,
           text: _selectedBlock.text,
           boundingBox: _selectedBlock.boundingBox,
-          editedText: _editController.text);
+          editedText: _editController.text,
+          isUserCreated: _selectedBlock.isUserCreated);
 
       List<StringBlock> _stringBlocks = [...widget.ocrImage.stringBlocks];
 
@@ -67,7 +68,7 @@ class _TextBlockEditorState extends State<TextBlockEditor> {
       width: double.infinity,
       child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-          child: widget.selectedBlockIndex != null
+          child: (widget.selectedBlockIndex != null)
               ? Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

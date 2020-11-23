@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
 import './text_block_editor.dart';
@@ -26,7 +27,6 @@ class DisplayImage extends StatefulWidget {
 
 class _DisplayImageState extends State<DisplayImage> {
   int _selectedBlockIndex;
-  Rect _newBoundingBox;
 
   void _settingModalBottomSheet(context) {
     showModalBottomSheet(
@@ -35,8 +35,9 @@ class _DisplayImageState extends State<DisplayImage> {
         isScrollControlled: true,
         builder: (BuildContext context) {
           return TextBlockEditor(
-              ocrImage: widget.ocrImage,
-              selectedBlockIndex: _selectedBlockIndex);
+            ocrImage: widget.ocrImage,
+            selectedBlockIndex: _selectedBlockIndex,
+          );
         }).then((_) {
       setState(() {
         _selectedBlockIndex = null;
@@ -78,7 +79,8 @@ class _DisplayImageState extends State<DisplayImage> {
                     block.boundingBox.top * changeInSize,
                     block.boundingBox.right * changeInSize,
                     block.boundingBox.bottom * changeInSize),
-                editedText: block.editedText);
+                editedText: block.editedText,
+                isUserCreated: block.isUserCreated);
           }).toList();
 
           return Center(
@@ -97,6 +99,7 @@ class _DisplayImageState extends State<DisplayImage> {
                         RenderBox box = context.findRenderObject();
                         final offset =
                             box.globalToLocal(details.globalPosition);
+
                         final index = _stringBlocks.lastIndexWhere(
                             (block) => block.boundingBox.contains(offset));
 
@@ -112,8 +115,32 @@ class _DisplayImageState extends State<DisplayImage> {
                         }
                       },
                       onLongPressEnd: (details) {
-                        print(details.localPosition);
-                        // final
+                        final xPos = details.localPosition.dx;
+                        final yPos = details.localPosition.dy;
+                        final quarterOfWidth =
+                            MediaQuery.of(context).size.width / 4;
+                        final newBlocks = [...widget.ocrImage.stringBlocks];
+                        newBlocks.add(StringBlock(
+                            id: Uuid().v4(),
+                            text: '',
+                            boundingBox: Rect.fromLTRB(
+                                (xPos - quarterOfWidth) >= 0
+                                    ? xPos - quarterOfWidth
+                                    : 0,
+                                (yPos - 30) >= 0 ? yPos - 30 : 0,
+                                xPos + quarterOfWidth,
+                                yPos + 30),
+                            isUserCreated: true));
+
+                        Provider.of<OCRImages>(context, listen: false)
+                            .updateImage(
+                                widget.ocrImage.id,
+                                OCRImage(
+                                    id: widget.ocrImage.id,
+                                    imageURL: widget.ocrImage.imageURL,
+                                    stringBlocks: newBlocks,
+                                    createdAt: widget.ocrImage.createdAt,
+                                    editedAt: widget.ocrImage.editedAt));
                       },
                       child: Container(
                         width: double.infinity,
@@ -121,13 +148,13 @@ class _DisplayImageState extends State<DisplayImage> {
                                 (_loadedImage.height.toDouble() ?? 1)) /
                             (_loadedImage.width.toDouble() ?? 1),
                         child: CustomPaint(
-                          painter: RectPainter(
-                              stringBlocks: _stringBlocks,
-                              selectedBlockid: _selectedBlockIndex != null
-                                  ? widget.ocrImage
-                                      .stringBlocks[_selectedBlockIndex].id
-                                  : null),
-                        ),
+                            painter: RectPainter(
+                          stringBlocks: _stringBlocks,
+                          selectedBlockid: _selectedBlockIndex != null
+                              ? widget
+                                  .ocrImage.stringBlocks[_selectedBlockIndex].id
+                              : null,
+                        )),
                       ),
                     )
                   ],
