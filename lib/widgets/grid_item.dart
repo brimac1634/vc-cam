@@ -46,6 +46,7 @@ class GridItem extends StatelessWidget {
                   ],
                 ),
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
                     AnimatedOpacity(
                         opacity: isSelecting ? 0.7 : 1.0,
@@ -53,7 +54,7 @@ class GridItem extends StatelessWidget {
                         curve: Curves.easeOutSine,
                         child: Image.asset(
                           ocrImage.imageURL,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                         )),
                     Positioned(
                       top: 0,
