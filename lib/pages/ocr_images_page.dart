@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './image_details_page.dart';
-import '../components/top_bar.dart';
-import '../components/grid_item.dart';
+import '../widgets/top_bar.dart';
+import '../widgets/grid_item.dart';
 
 import '../providers/ocr_images.dart';
 // import '../providers/page_index.dart';
@@ -26,6 +26,7 @@ class _OCRImagesPageState extends State<OCRImagesPage>
 
   double _topBarOpacity = 0.0;
   bool _isEditing = false;
+  Map<String, bool> _selectedItems = {};
 
   @override
   void initState() {
@@ -112,17 +113,30 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                               widget.animationController.forward();
                               return InkWell(
                                 onTap: () {
-                                  _imagesProvider.selectImage(
-                                      _imagesProvider.imagesArray[index].id);
-                                  Navigator.of(context).pushNamed(
-                                      ImageDetailsPage.pathName,
-                                      arguments: widget.animationController);
+                                  final _imageId =
+                                      _imagesProvider.imagesArray[index].id;
+                                  if (_isEditing) {
+                                    setState(() {
+                                      _selectedItems[_imageId] =
+                                          _selectedItems[_imageId]
+                                              ? !_selectedItems[_imageId]
+                                              : true;
+                                    });
+                                  } else {
+                                    _imagesProvider.selectImage(_imageId);
+                                    Navigator.of(context).pushNamed(
+                                        ImageDetailsPage.pathName,
+                                        arguments: widget.animationController);
+                                  }
                                 },
                                 child: GridItem(
                                   animationController:
                                       widget.animationController,
                                   animation: _animation,
                                   ocrImage: _imagesProvider.imagesArray[index],
+                                  isSelecting: _isEditing,
+                                  isSelected: _selectedItems[_imagesProvider
+                                      .imagesArray[index].id] ??= false,
                                 ),
                               );
                             },
@@ -148,12 +162,16 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                   curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn),
                   child: IconButton(
                       icon: Image.asset(
-                        'assets/delete.png',
+                        'assets/trash.png',
                         width: VCAppTheme.iconWidth,
                         height: VCAppTheme.iconHeight,
                       ),
                       onPressed: () {
-                        if (!_isEditing) return;
+                        if (_isEditing && _selectedItems.length >= 1) {
+                          _imagesProvider.deleteManyImages(_selectedItems.keys
+                              .where((key) => _selectedItems[key] == true)
+                              .toList());
+                        }
                         setState(() {
                           _isEditing = !_isEditing;
                         });

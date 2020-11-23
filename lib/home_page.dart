@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import './pages/ocr_images_page.dart';
 
-import './components/bottom_bar_view.dart';
-import './components/ml_image_picker.dart';
-import './components/custom_bottom_sheet.dart';
+import './widgets/bottom_bar_view.dart';
+import './widgets/ml_image_picker.dart';
+import './widgets/custom_bottom_sheet.dart';
 
 import 'vc_app_theme.dart';
 

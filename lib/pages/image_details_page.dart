@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../components/top_bar.dart';
-import '../components/display_image.dart';
+import '../widgets/top_bar.dart';
+import '../widgets/display_image.dart';
 
 import '../providers/ocr_images.dart';
 
