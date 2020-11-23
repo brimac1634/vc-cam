@@ -26,11 +26,18 @@ class DisplayImage extends StatefulWidget {
 }
 
 class _DisplayImageState extends State<DisplayImage> {
+  TextEditingController _originalController;
   TextEditingController _editController;
   int _selectedBlockIndex;
 
-  void _submitData() {
-    print('hey');
+  @override
+  void dispose() {
+    _editController.dispose();
+    _originalController.dispose();
+    super.dispose();
+  }
+
+  void _submit(BuildContext context) {
     final _updatedStringBlock = StringBlock(
         id: widget.ocrImage.stringBlocks[_selectedBlockIndex].id,
         text: widget.ocrImage.stringBlocks[_selectedBlockIndex].text,
@@ -42,7 +49,7 @@ class _DisplayImageState extends State<DisplayImage> {
 
     _stringBlocks[_selectedBlockIndex] = _updatedStringBlock;
 
-    Provider.of<OCRImages>(context).updateImage(
+    Provider.of<OCRImages>(context, listen: false).updateImage(
         widget.ocrImage.id,
         OCRImage(
             id: widget.ocrImage.id,
@@ -50,6 +57,8 @@ class _DisplayImageState extends State<DisplayImage> {
             stringBlocks: _stringBlocks,
             createdAt: widget.ocrImage.createdAt,
             editedAt: DateTime.now()));
+
+    Navigator.of(context).pop();
   }
 
   void _settingModalBottomSheet(context) {
@@ -58,7 +67,7 @@ class _DisplayImageState extends State<DisplayImage> {
         context: context,
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
-        builder: (BuildContext bc) {
+        builder: (BuildContext context) {
           return CustomBottomSheet(
               child: SizedBox(
             width: double.infinity,
@@ -71,7 +80,7 @@ class _DisplayImageState extends State<DisplayImage> {
                     padding: const EdgeInsets.only(bottom: 18),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 14),
@@ -80,58 +89,90 @@ class _DisplayImageState extends State<DisplayImage> {
                             style: VCAppTheme.body1,
                           ),
                         ),
-                        Text(
-                          widget
-                              .ocrImage.stringBlocks[_selectedBlockIndex].text,
-                          style: VCAppTheme.title,
-                        ),
+                        Flexible(
+                          child: TextField(
+                            enabled: false,
+                            cursorColor: VCAppTheme.specialBlue,
+                            style: VCAppTheme.title,
+                            controller:
+                                _originalController = TextEditingController()
+                                  ..text = widget.ocrImage
+                                      .stringBlocks[_selectedBlockIndex].text,
+                            decoration: InputDecoration(
+                                focusColor: VCAppTheme.specialBlue,
+                                hoverColor: VCAppTheme.specialBlue,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: VCAppTheme.dark_grey),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: VCAppTheme.specialBlue),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: VCAppTheme.dark_grey),
+                                ),
+                                disabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: VCAppTheme.dark_grey))),
+                          ),
+                        )
                       ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 18),
-                    child: Row(children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 22),
-                        child: Text(
-                          'Edited:',
-                          style: VCAppTheme.body1,
-                        ),
-                      ),
-                      Flexible(
-                        child: TextField(
-                          cursorColor: VCAppTheme.specialBlue,
-                          style: VCAppTheme.title,
-                          decoration: InputDecoration(
-                            focusColor: VCAppTheme.specialBlue,
-                            hoverColor: VCAppTheme.specialBlue,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: VCAppTheme.dark_grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: VCAppTheme.specialBlue),
-                            ),
-                            border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: VCAppTheme.dark_grey),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 22),
+                            child: Text(
+                              'Edited:',
+                              style: VCAppTheme.body1,
                             ),
                           ),
-                          textInputAction: TextInputAction.done,
-                          controller: _editController = TextEditingController()
-                            ..text = widget.ocrImage
-                                .stringBlocks[_selectedBlockIndex].editedText,
-                          onSubmitted: (_) => _submitData(),
-                        ),
-                      ),
-                    ]),
+                          Flexible(
+                            child: TextField(
+                              cursorColor: VCAppTheme.specialBlue,
+                              style: VCAppTheme.title,
+                              decoration: InputDecoration(
+                                focusColor: VCAppTheme.specialBlue,
+                                hoverColor: VCAppTheme.specialBlue,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: VCAppTheme.dark_grey),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: VCAppTheme.dark_grey),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: VCAppTheme.dark_grey),
+                                ),
+                              ),
+                              textInputAction: TextInputAction.done,
+                              controller:
+                                  _editController = TextEditingController()
+                                    ..text = widget
+                                        .ocrImage
+                                        .stringBlocks[_selectedBlockIndex]
+                                        .editedText,
+                              onSubmitted: (_) => _submit(context),
+                            ),
+                          ),
+                        ]),
                   ),
                   Row(
                     children: [
                       Spacer(),
                       FlatButton(
-                          onPressed: _submitData,
+                          onPressed: () {
+                            _submit(context);
+                          },
                           child: Text(
                             'Save',
                             style: TextStyle(

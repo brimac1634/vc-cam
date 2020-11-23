@@ -81,6 +81,7 @@ class OCRImages with ChangeNotifier {
   void updateImage(String id, OCRImage ocrImage) {
     if (_images.containsKey(id)) {
       _images[id] = ocrImage;
+      _selectedImage = ocrImage;
       notifyListeners();
     }
   }
