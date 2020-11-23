@@ -25,8 +25,8 @@ class DisplayImage extends StatefulWidget {
 }
 
 class _DisplayImageState extends State<DisplayImage> {
-  TextEditingController _originalController;
-  TextEditingController _editController;
+  TextEditingController _originalController = TextEditingController();
+  TextEditingController _editController = TextEditingController();
   int _selectedBlockIndex;
 
   @override
@@ -93,10 +93,9 @@ class _DisplayImageState extends State<DisplayImage> {
                             enabled: false,
                             cursorColor: VCAppTheme.specialBlue,
                             style: VCAppTheme.title,
-                            controller:
-                                _originalController = TextEditingController()
-                                  ..text = widget.ocrImage
-                                      .stringBlocks[_selectedBlockIndex].text,
+                            controller: _originalController
+                              ..text = widget.ocrImage
+                                  .stringBlocks[_selectedBlockIndex].text,
                             decoration: InputDecoration(
                                 focusColor: VCAppTheme.specialBlue,
                                 hoverColor: VCAppTheme.specialBlue,
@@ -154,12 +153,11 @@ class _DisplayImageState extends State<DisplayImage> {
                                 ),
                               ),
                               textInputAction: TextInputAction.done,
-                              controller:
-                                  _editController = TextEditingController()
-                                    ..text = widget
-                                        .ocrImage
-                                        .stringBlocks[_selectedBlockIndex]
-                                        .editedText,
+                              controller: _editController
+                                ..text = widget
+                                    .ocrImage
+                                    .stringBlocks[_selectedBlockIndex]
+                                    .editedText,
                               onSubmitted: (_) => _submit(context),
                             ),
                           ),
@@ -172,16 +170,7 @@ class _DisplayImageState extends State<DisplayImage> {
                           onPressed: () {
                             _submit(context);
                           },
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                              color: VCAppTheme.specialBlue,
-                              fontFamily: VCAppTheme.fontName,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              letterSpacing: 0.18,
-                            ),
-                          ))
+                          child: Text('Save', style: VCAppTheme.flatButton))
                     ],
                   )
                 ],

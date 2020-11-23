@@ -27,6 +27,11 @@ class VCAppTheme {
 
   static const Radius borderRadius = Radius.circular(20.0);
 
+  static const LinearGradient gradient = LinearGradient(colors: [
+    VCAppTheme.nearlyDarkBlue,
+    Color(0xff6A88E5),
+  ], begin: Alignment.topLeft, end: Alignment.bottomRight);
+
   static const TextTheme textTheme = TextTheme(
     headline4: display1,
     headline5: headline,
@@ -92,5 +97,13 @@ class VCAppTheme {
     fontSize: 12,
     letterSpacing: 0.2,
     color: lightText, // was lightText
+  );
+
+  static const TextStyle flatButton = TextStyle(
+    color: specialBlue,
+    fontFamily: fontName,
+    fontWeight: FontWeight.bold,
+    fontSize: 18,
+    letterSpacing: 0.18,
   );
 }

@@ -95,13 +95,7 @@ class _BottomBarViewState extends State<BottomBarView>
                         // alignment: Alignment.center,s
                         decoration: BoxDecoration(
                           color: VCAppTheme.nearlyDarkBlue,
-                          gradient: LinearGradient(
-                              colors: [
-                                VCAppTheme.nearlyDarkBlue,
-                                Color(0xff6A88E5),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight),
+                          gradient: VCAppTheme.gradient,
                           shape: BoxShape.circle,
                           boxShadow: <BoxShadow>[
                             BoxShadow(

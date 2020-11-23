@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import './image_details_page.dart';
 import '../widgets/top_bar.dart';
 import '../widgets/grid_item.dart';
+import '../widgets/custom_alert_dialog.dart';
 
 import '../providers/ocr_images.dart';
-// import '../providers/page_index.dart';
 
 import '../vc_app_theme.dart';
 
@@ -167,13 +167,46 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                         height: VCAppTheme.iconHeight,
                       ),
                       onPressed: () {
-                        if (_isEditing && _selectedItems.length >= 1) {
-                          _imagesProvider.deleteManyImages(_selectedItems.keys
-                              .where((key) => _selectedItems[key] == true)
-                              .toList());
-                        }
-                        setState(() {
-                          _isEditing = !_isEditing;
+                        if (!_isEditing || _selectedItems.length >= 1) return;
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomAlertDialog(
+                                title: 'Delete',
+                                content: 'Are you sure you?',
+                                actions: [
+                                  FlatButton(
+                                    child: Text(
+                                      'No',
+                                      style: VCAppTheme.flatButton,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text(
+                                      'Yes',
+                                      style: VCAppTheme.flatButton,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                  )
+                                ],
+                              );
+                            }).then((delete) {
+                          if (delete) {
+                            _imagesProvider.deleteManyImages(_selectedItems.keys
+                                .where((key) => _selectedItems[key] == true)
+                                .toList());
+
+                            setState(() {
+                              _isEditing = !_isEditing;
+                            });
+                          }
+                        }).catchError((onError) {
+                          print(onError.toString());
                         });
                       }),
                 ),
@@ -186,6 +219,7 @@ class _OCRImagesPageState extends State<OCRImagesPage>
                   onPressed: () {
                     setState(() {
                       _isEditing = !_isEditing;
+                      _selectedItems = {};
                     });
                   },
                 )

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/top_bar.dart';
 import '../widgets/display_image.dart';
+import '../widgets/custom_alert_dialog.dart';
 
 import '../providers/ocr_images.dart';
 
@@ -41,9 +42,42 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
               height: VCAppTheme.iconHeight,
             ),
             onPressed: () {
-              // TODO PRESENT MODAL ASKING IF SURE
-              _ocrImageProvider.deleteImage(_ocrImageProvider.selectedImage.id);
-              Navigator.of(context).pop();
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomAlertDialog(
+                      title: 'Delete',
+                      content: 'Are you sure you?',
+                      actions: [
+                        FlatButton(
+                          child: Text(
+                            'No',
+                            style: VCAppTheme.flatButton,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'Yes',
+                            style: VCAppTheme.flatButton,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                          },
+                        )
+                      ],
+                    );
+                  }).then((delete) {
+                if (delete) {
+                  _ocrImageProvider
+                      .deleteImage(_ocrImageProvider.selectedImage.id);
+                  Navigator.of(context).pop();
+                }
+              }).catchError((onError) {
+                print(onError.toString());
+              });
             },
           ),
         ),
