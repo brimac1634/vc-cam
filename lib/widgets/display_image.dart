@@ -188,44 +188,71 @@ class _DisplayImageState extends State<DisplayImage> {
     });
   }
 
+  Future<ui.Image> loadImage(String asset) async {
+    ByteData data = await rootBundle.load(asset);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return fi.image;
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Rect> _rects =
         widget.ocrImage.stringBlocks.map((block) => block.boundingBox).toList();
 
-    return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTapDown: (details) {
-          RenderBox box = context.findRenderObject();
-          final offset = box.globalToLocal(details.globalPosition);
-          final index = _rects.lastIndexWhere((rect) => rect.contains(offset));
-          if (index != -1) {
-            setState(() {
-              _selectedBlockIndex = index;
-            });
-            _settingModalBottomSheet(context);
-          } else {
-            setState(() {
-              _selectedBlockIndex = null;
-            });
-          }
-        },
-        child: Center(
-          child: Stack(
-            children: [
-              Image.asset(
-                widget.ocrImage.imageURL,
-                fit: BoxFit.contain,
-              ),
-              CustomPaint(
-                painter: RectPainter(
-                    stringBlocks: widget.ocrImage.stringBlocks,
-                    selectedBlockid: _selectedBlockIndex != null
-                        ? widget.ocrImage.stringBlocks[_selectedBlockIndex].id
-                        : null),
-              ),
-            ],
-          ),
-        ));
+    return FutureBuilder(
+      future: loadImage(widget.ocrImage.imageURL),
+      builder: (context, snapshot) {
+        final ui.Image _loadedImage = snapshot.data;
+        return Center(
+        child: Container(
+          color: Colors.red,
+          child: LayoutBuilder(builder: (context, constraints) {
+            return Stack(
+              children: [
+                Image.asset(
+                  widget.ocrImage.imageURL,
+                  fit: BoxFit.contain,
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTapDown: (details) {
+                    RenderBox box = context.findRenderObject();
+                    final offset = box.globalToLocal(details.globalPosition);
+                    final index =
+                        _rects.lastIndexWhere((rect) => rect.contains(offset));
+                    print(offset);
+
+                    if (index != -1) {
+                      setState(() {
+                        _selectedBlockIndex = index;
+                      });
+                      _settingModalBottomSheet(context);
+                    } else {
+                      setState(() {
+                        _selectedBlockIndex = null;
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: _loadedImage.width.toDouble(),
+                    height: _loadedImage.height.toDouble(),
+                    child: CustomPaint(
+                      painter: RectPainter(
+                          stringBlocks: widget.ocrImage.stringBlocks,
+                          selectedBlockid: _selectedBlockIndex != null
+                              ? widget
+                                  .ocrImage.stringBlocks[_selectedBlockIndex].id
+                              : null),
+                    ),
+                  ),
+                )
+              ],
+            );
+          }),
+        ),
+      ),
+      } 
+    );
   }
 }
