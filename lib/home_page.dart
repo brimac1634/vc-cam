@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage>
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        isScrollControlled: true,
         builder: (BuildContext bc) {
           return CustomBottomSheet(child: MLImagePicker((bool isLoading) {
             setState(() {
@@ -73,7 +74,12 @@ class _HomePageState extends State<HomePage>
                       _settingModalBottomSheet(context);
                     },
                   ),
-                  if (_isLoading) Center(child: CircularProgressIndicator())
+                  if (_isLoading)
+                    Center(
+                        child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(VCAppTheme.specialBlue),
+                    ))
                 ],
               );
             }

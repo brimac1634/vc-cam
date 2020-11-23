@@ -29,10 +29,35 @@ class _DisplayImageState extends State<DisplayImage> {
   TextEditingController _editController;
   int _selectedBlockIndex;
 
+  void _submitData() {
+    print('hey');
+    final _updatedStringBlock = StringBlock(
+        id: widget.ocrImage.stringBlocks[_selectedBlockIndex].id,
+        text: widget.ocrImage.stringBlocks[_selectedBlockIndex].text,
+        boundingBox:
+            widget.ocrImage.stringBlocks[_selectedBlockIndex].boundingBox,
+        editedText: _editController.text);
+
+    List<StringBlock> _stringBlocks = [...widget.ocrImage.stringBlocks];
+
+    _stringBlocks[_selectedBlockIndex] = _updatedStringBlock;
+
+    Provider.of<OCRImages>(context).updateImage(
+        widget.ocrImage.id,
+        OCRImage(
+            id: widget.ocrImage.id,
+            imageURL: widget.ocrImage.imageURL,
+            stringBlocks: _stringBlocks,
+            createdAt: widget.ocrImage.createdAt,
+            editedAt: DateTime.now()));
+  }
+
   void _settingModalBottomSheet(context) {
+    print(widget.ocrImage.stringBlocks[_selectedBlockIndex].editedText);
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        isScrollControlled: true,
         builder: (BuildContext bc) {
           return CustomBottomSheet(
               child: SizedBox(
@@ -40,42 +65,85 @@ class _DisplayImageState extends State<DisplayImage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    widget.ocrImage.stringBlocks[_selectedBlockIndex].text,
-                    style: VCAppTheme.title,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Text Edit'),
-                    controller: _editController = TextEditingController()
-                      ..text = widget.ocrImage.stringBlocks[_selectedBlockIndex]
-                          .editedText,
-                    onSubmitted: (_) {
-                      final _updatedStringBlock = StringBlock(
-                          id: widget
-                              .ocrImage.stringBlocks[_selectedBlockIndex].id,
-                          text: widget
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 18),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 14),
+                          child: Text(
+                            'Original:',
+                            style: VCAppTheme.body1,
+                          ),
+                        ),
+                        Text(
+                          widget
                               .ocrImage.stringBlocks[_selectedBlockIndex].text,
-                          boundingBox: widget.ocrImage
-                              .stringBlocks[_selectedBlockIndex].boundingBox,
-                          editedText: _editController.text);
-
-                      List<StringBlock> _stringBlocks = [
-                        ...widget.ocrImage.stringBlocks
-                      ];
-
-                      _stringBlocks[_selectedBlockIndex] = _updatedStringBlock;
-
-                      Provider.of<OCRImages>(context).updateImage(
-                          widget.ocrImage.id,
-                          OCRImage(
-                              id: widget.ocrImage.id,
-                              imageURL: widget.ocrImage.imageURL,
-                              stringBlocks: _stringBlocks,
-                              createdAt: widget.ocrImage.createdAt,
-                              editedAt: DateTime.now()));
-                    },
+                          style: VCAppTheme.title,
+                        ),
+                      ],
+                    ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 18),
+                    child: Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 22),
+                        child: Text(
+                          'Edited:',
+                          style: VCAppTheme.body1,
+                        ),
+                      ),
+                      Flexible(
+                        child: TextField(
+                          cursorColor: VCAppTheme.specialBlue,
+                          style: VCAppTheme.title,
+                          decoration: InputDecoration(
+                            focusColor: VCAppTheme.specialBlue,
+                            hoverColor: VCAppTheme.specialBlue,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: VCAppTheme.dark_grey),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: VCAppTheme.specialBlue),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: VCAppTheme.dark_grey),
+                            ),
+                          ),
+                          textInputAction: TextInputAction.done,
+                          controller: _editController = TextEditingController()
+                            ..text = widget.ocrImage
+                                .stringBlocks[_selectedBlockIndex].editedText,
+                          onSubmitted: (_) => _submitData(),
+                        ),
+                      ),
+                    ]),
+                  ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      FlatButton(
+                          onPressed: _submitData,
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              color: VCAppTheme.specialBlue,
+                              fontFamily: VCAppTheme.fontName,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              letterSpacing: 0.18,
+                            ),
+                          ))
+                    ],
+                  )
                 ],
               ),
             ),
