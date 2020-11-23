@@ -23,14 +23,11 @@ class TextBlockEditor extends StatefulWidget {
 }
 
 class _TextBlockEditorState extends State<TextBlockEditor> {
-  TextEditingController _originalController = TextEditingController();
-
   TextEditingController _editController = TextEditingController();
 
   @override
   void dispose() {
     _editController.dispose();
-    _originalController.dispose();
     super.dispose();
   }
 
