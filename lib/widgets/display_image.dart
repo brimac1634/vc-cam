@@ -197,62 +197,77 @@ class _DisplayImageState extends State<DisplayImage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Rect> _rects =
-        widget.ocrImage.stringBlocks.map((block) => block.boundingBox).toList();
-
     return FutureBuilder(
-      future: loadImage(widget.ocrImage.imageURL),
-      builder: (context, snapshot) {
-        final ui.Image _loadedImage = snapshot.data;
-        return Center(
-        child: Container(
-          color: Colors.red,
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Stack(
-              children: [
-                Image.asset(
-                  widget.ocrImage.imageURL,
-                  fit: BoxFit.contain,
-                ),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTapDown: (details) {
-                    RenderBox box = context.findRenderObject();
-                    final offset = box.globalToLocal(details.globalPosition);
-                    final index =
-                        _rects.lastIndexWhere((rect) => rect.contains(offset));
-                    print(offset);
+        future: loadImage(widget.ocrImage.imageURL),
+        builder: (context, snapshot) {
+          final ui.Image _loadedImage = snapshot.data;
 
-                    if (index != -1) {
-                      setState(() {
-                        _selectedBlockIndex = index;
-                      });
-                      _settingModalBottomSheet(context);
-                    } else {
-                      setState(() {
-                        _selectedBlockIndex = null;
-                      });
-                    }
-                  },
-                  child: Container(
-                    width: _loadedImage.width.toDouble(),
-                    height: _loadedImage.height.toDouble(),
-                    child: CustomPaint(
-                      painter: RectPainter(
-                          stringBlocks: widget.ocrImage.stringBlocks,
-                          selectedBlockid: _selectedBlockIndex != null
-                              ? widget
-                                  .ocrImage.stringBlocks[_selectedBlockIndex].id
-                              : null),
+          final changeInSize = (MediaQuery.of(context).size.width /
+              (_loadedImage.width.toDouble() ?? 1));
+
+          final List<StringBlock> _stringBlocks =
+              widget.ocrImage.stringBlocks.map((block) {
+            return StringBlock(
+                id: block.id,
+                text: block.text,
+                boundingBox: Rect.fromLTRB(
+                    block.boundingBox.left * changeInSize,
+                    block.boundingBox.top * changeInSize,
+                    block.boundingBox.right * changeInSize,
+                    block.boundingBox.bottom * changeInSize),
+                editedText: block.editedText);
+          }).toList();
+
+          return Center(
+            child: Container(
+              child: LayoutBuilder(builder: (context, constraints) {
+                return Stack(
+                  children: [
+                    Image.asset(
+                      widget.ocrImage.imageURL,
+                      width: double.infinity,
+                      fit: BoxFit.fill,
                     ),
-                  ),
-                )
-              ],
-            );
-          }),
-        ),
-      ),
-      } 
-    );
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTapDown: (details) {
+                        RenderBox box = context.findRenderObject();
+                        final offset =
+                            box.globalToLocal(details.globalPosition);
+                        final index = _stringBlocks.lastIndexWhere(
+                            (block) => block.boundingBox.contains(offset));
+
+                        if (index != -1) {
+                          setState(() {
+                            _selectedBlockIndex = index;
+                          });
+                          _settingModalBottomSheet(context);
+                        } else {
+                          setState(() {
+                            _selectedBlockIndex = null;
+                          });
+                        }
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        height: (MediaQuery.of(context).size.width *
+                                (_loadedImage.height.toDouble() ?? 1)) /
+                            (_loadedImage.width.toDouble() ?? 1),
+                        child: CustomPaint(
+                          painter: RectPainter(
+                              stringBlocks: _stringBlocks,
+                              selectedBlockid: _selectedBlockIndex != null
+                                  ? widget.ocrImage
+                                      .stringBlocks[_selectedBlockIndex].id
+                                  : null),
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
+            ),
+          );
+        });
   }
 }
