@@ -57,11 +57,13 @@ class _DisplayImageState extends State<DisplayImage> {
             createdAt: widget.ocrImage.createdAt,
             editedAt: DateTime.now()));
 
+    setState(() {
+      _selectedBlockIndex = null;
+    });
     Navigator.of(context).pop();
   }
 
   void _settingModalBottomSheet(context) {
-    print(widget.ocrImage.stringBlocks[_selectedBlockIndex].editedText);
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
@@ -177,15 +179,14 @@ class _DisplayImageState extends State<DisplayImage> {
               ),
             ),
           ));
-        });
+        }).then((_) {
+      setState(() {
+        _selectedBlockIndex = null;
+      });
+    }).catchError((onError) {
+      print(onError.toString());
+    });
   }
-
-  // Future<ui.Image> loadImage(String asset) async {
-  //   ByteData data = await rootBundle.load(asset);
-  //   ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
-  //   ui.FrameInfo fi = await codec.getNextFrame();
-  //   return fi.image;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -217,7 +218,11 @@ class _DisplayImageState extends State<DisplayImage> {
                 fit: BoxFit.contain,
               ),
               CustomPaint(
-                painter: RectPainter(rects: _rects),
+                painter: RectPainter(
+                    stringBlocks: widget.ocrImage.stringBlocks,
+                    selectedBlockid: _selectedBlockIndex != null
+                        ? widget.ocrImage.stringBlocks[_selectedBlockIndex].id
+                        : null),
               ),
             ],
           ),

@@ -34,7 +34,8 @@ class ImageThumbnail extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
             child: CustomPaint(
-              painter: RectPainter(rects: _rects, image: snapshot.data),
+              painter: RectPainter(
+                  stringBlocks: ocrImage.stringBlocks, image: snapshot.data),
             ));
       },
     );

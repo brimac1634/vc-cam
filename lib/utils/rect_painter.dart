@@ -7,11 +7,11 @@ import '../models/string_block.dart';
 import '../vc_app_theme.dart';
 
 class RectPainter extends CustomPainter {
-  final List<Rect> rects;
+  final List<StringBlock> stringBlocks;
   final ui.Image image;
-  // final int selectedIndex;
+  final String selectedBlockid;
 
-  RectPainter({@required this.rects, this.image});
+  RectPainter({@required this.stringBlocks, this.image, this.selectedBlockid});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -19,13 +19,17 @@ class RectPainter extends CustomPainter {
       canvas.drawImage(image, Offset.zero, Paint());
     }
 
-    for (Rect rect in rects) {
-      canvas.drawRect(
-          rect,
-          Paint()
-            ..color = VCAppTheme.rectPink
-            ..strokeWidth = 3.0
-            ..style = PaintingStyle.stroke);
+    for (StringBlock block in stringBlocks) {
+      if (selectedBlockid == null || selectedBlockid == block.id) {
+        canvas.drawRect(
+            block.boundingBox,
+            Paint()
+              ..color = block.editedText != null
+                  ? VCAppTheme.rectPink
+                  : VCAppTheme.nearlyDarkBlue
+              ..strokeWidth = 4.0
+              ..style = PaintingStyle.stroke);
+      }
     }
   }
 
