@@ -32,6 +32,9 @@ class DisplayImage extends StatefulWidget {
 class _DisplayImageState extends State<DisplayImage> {
   int _selectedBlockIndex;
   bool _dragging = false;
+  bool _scaling = false;
+  double _baseScaleWidth;
+  double _baseScaleHeight;
 
   bool _insideRect(double x, double y) {
     return x >= widget.newRect.left &&
@@ -146,20 +149,23 @@ class _DisplayImageState extends State<DisplayImage> {
                           _editBlockOnTap(context, details, _stringBlocks);
                         }
                       },
-                      onPanStart: (details) => _dragging = _insideRect(
-                        details.localPosition.dx,
-                        details.localPosition.dy,
-                      ),
-                      onPanEnd: (details) {
-                        _dragging = false;
+                      onScaleStart: (details) {
+                        if (widget.newRect == null || !widget.isAdding) return;
+                        _scaling = _insideRect(details.localFocalPoint.dx,
+                            details.localFocalPoint.dy);
+                        _baseScaleWidth = widget.newRect.size.width;
+                        _baseScaleHeight = widget.newRect.size.height;
                       },
-                      onPanUpdate: (details) {
-                        if (_dragging) {
-                          widget.setNewRect(Rect.fromLTRB(
-                              widget.newRect.left + details.delta.dx,
-                              widget.newRect.top + details.delta.dy,
-                              widget.newRect.right + details.delta.dx,
-                              widget.newRect.bottom + details.delta.dy));
+                      onScaleEnd: (details) {
+                        if (widget.newRect == null || !widget.isAdding) return;
+                        _scaling = false;
+                      },
+                      onScaleUpdate: (details) {
+                        if (_scaling) {
+                          widget.setNewRect(Rect.fromCenter(
+                              center: details.localFocalPoint,
+                              width: _baseScaleWidth * details.scale,
+                              height: _baseScaleHeight * details.scale));
                         }
                       },
                       child: Container(
