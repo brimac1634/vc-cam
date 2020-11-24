@@ -13,8 +13,13 @@ class RectPainter extends CustomPainter {
   final List<StringBlock> stringBlocks;
   final ui.Image image;
   final String selectedBlockid;
+  final Rect newRect;
 
-  RectPainter({@required this.stringBlocks, this.image, this.selectedBlockid});
+  RectPainter(
+      {@required this.stringBlocks,
+      this.image,
+      this.selectedBlockid,
+      this.newRect});
 
   Color getColor(StringBlock block) {
     if (block.isUserCreated) return Colors.yellow;
@@ -27,6 +32,15 @@ class RectPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (image != null) {
       canvas.drawImage(image, Offset.zero, Paint());
+    }
+
+    if (newRect != null) {
+      canvas.drawRect(
+          newRect,
+          Paint()
+            ..color = Colors.yellow
+            ..strokeWidth = strokeWidth
+            ..style = paintingStyle);
     }
 
     for (StringBlock block in stringBlocks) {

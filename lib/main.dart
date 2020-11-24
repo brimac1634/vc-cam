@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       providers: [ChangeNotifierProvider(create: (ctx) => OCRImages())],
       child: MaterialApp(
         title: 'VC Cam',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           textTheme: VCAppTheme.textTheme,
           visualDensity: VisualDensity.adaptivePlatformDensity,

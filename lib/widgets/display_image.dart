@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
 import './text_block_editor.dart';
+import './custom_painter_draggable.dart';
 
 import '../utils/rect_painter.dart';
 
@@ -18,8 +19,13 @@ import '../vc_app_theme.dart';
 
 class DisplayImage extends StatefulWidget {
   final OCRImage ocrImage;
+  final bool isAdding;
+  final Function(bool) setNewRectIsAdded;
 
-  DisplayImage({@required this.ocrImage});
+  DisplayImage(
+      {@required this.ocrImage,
+      @required this.isAdding,
+      this.setNewRectIsAdded});
 
   @override
   _DisplayImageState createState() => _DisplayImageState();
@@ -27,6 +33,17 @@ class DisplayImage extends StatefulWidget {
 
 class _DisplayImageState extends State<DisplayImage> {
   int _selectedBlockIndex;
+  StringBlock _newBlock;
+  Rect _newRect;
+
+  bool _dragging = false;
+
+  bool _insideRect(double x, double y) {
+    return x >= _newRect.left &&
+        x <= _newRect.right &&
+        y >= _newRect.top &&
+        y <= _newRect.bottom;
+  }
 
   void _settingModalBottomSheet(context) {
     showModalBottomSheet(
@@ -44,6 +61,40 @@ class _DisplayImageState extends State<DisplayImage> {
       });
     }).catchError((onError) {
       print(onError.toString());
+    });
+  }
+
+  void _editBlockOnTap(BuildContext context, TapUpDetails details,
+      List<StringBlock> stringBlocks) {
+    RenderBox box = context.findRenderObject();
+    final offset = box.globalToLocal(details.globalPosition);
+
+    final index = stringBlocks
+        .lastIndexWhere((block) => block.boundingBox.contains(offset));
+
+    if (index != -1) {
+      setState(() {
+        _selectedBlockIndex = index;
+      });
+      _settingModalBottomSheet(context);
+    } else {
+      setState(() {
+        _selectedBlockIndex = null;
+      });
+    }
+  }
+
+  void _addNewBlockOnTap(TapUpDetails details) {
+    final xPos = details.localPosition.dx;
+    final yPos = details.localPosition.dy;
+    final quarterOfWidth = MediaQuery.of(context).size.width / 4;
+
+    setState(() {
+      _newRect = Rect.fromLTRB(
+          (xPos - quarterOfWidth) >= 0 ? xPos - quarterOfWidth : 0,
+          (yPos - 30) >= 0 ? yPos - 30 : 0,
+          xPos + quarterOfWidth,
+          yPos + 30);
     });
   }
 
@@ -95,67 +146,74 @@ class _DisplayImageState extends State<DisplayImage> {
                     ),
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTapDown: (details) {
-                        RenderBox box = context.findRenderObject();
-                        final offset =
-                            box.globalToLocal(details.globalPosition);
-
-                        final index = _stringBlocks.lastIndexWhere(
-                            (block) => block.boundingBox.contains(offset));
-
-                        if (index != -1) {
-                          setState(() {
-                            _selectedBlockIndex = index;
-                          });
-                          _settingModalBottomSheet(context);
+                      onTapUp: (details) {
+                        if (widget.isAdding) {
+                          _addNewBlockOnTap(details);
                         } else {
+                          _editBlockOnTap(context, details, _stringBlocks);
+                        }
+                      },
+                      onPanStart: (details) => _dragging = _insideRect(
+                        details.localPosition.dx,
+                        details.localPosition.dy,
+                      ),
+                      onPanEnd: (details) {
+                        _dragging = false;
+                      },
+                      onPanUpdate: (details) {
+                        if (_dragging) {
                           setState(() {
-                            _selectedBlockIndex = null;
+                            _newRect = Rect.fromLTRB(
+                                _newRect.left + details.delta.dx,
+                                _newRect.top + details.delta.dy,
+                                _newRect.right + details.delta.dx,
+                                _newRect.bottom + details.delta.dy);
                           });
                         }
                       },
-                      onLongPressEnd: (details) {
-                        final xPos = details.localPosition.dx;
-                        final yPos = details.localPosition.dy;
-                        final quarterOfWidth =
-                            MediaQuery.of(context).size.width / 4;
-                        final newBlocks = [...widget.ocrImage.stringBlocks];
-                        newBlocks.add(StringBlock(
-                            id: Uuid().v4(),
-                            text: '',
-                            boundingBox: Rect.fromLTRB(
-                                (xPos - quarterOfWidth) >= 0
-                                    ? xPos - quarterOfWidth
-                                    : 0,
-                                (yPos - 30) >= 0 ? yPos - 30 : 0,
-                                xPos + quarterOfWidth,
-                                yPos + 30),
-                            isUserCreated: true));
-
-                        Provider.of<OCRImages>(context, listen: false)
-                            .updateImage(
-                                widget.ocrImage.id,
-                                OCRImage(
-                                    id: widget.ocrImage.id,
-                                    imageURL: widget.ocrImage.imageURL,
-                                    stringBlocks: newBlocks,
-                                    createdAt: widget.ocrImage.createdAt,
-                                    editedAt: widget.ocrImage.editedAt));
-                      },
+                      // onPanUpdate: (details) {
+                      //   print(details.delta.dx);
+                      //   RenderBox box = context.findRenderObject();
+                      //   final offset =
+                      //       box.globalToLocal(details.globalPosition);
+                      //   if (widget.isAdding &&
+                      //       _newBlock != null &&
+                      //       _newBlock.boundingBox.contains(offset)) {
+                      //     setState(() {
+                      //       _newBlock = StringBlock(
+                      //           id: 'temp',
+                      //           text: '',
+                      //           boundingBox: Rect.fromLTRB(
+                      //               _newBlock.boundingBox.left +
+                      //                   details.delta.dx,
+                      //               _newBlock.boundingBox.left +
+                      //                   details.delta.dy,
+                      //               _newBlock.boundingBox.left +
+                      //                   details.delta.dx,
+                      //               _newBlock.boundingBox.left +
+                      //                   details.delta.dy),
+                      //           isUserCreated: true);
+                      //     });
+                      // }
+                      // },
                       child: Container(
-                        width: double.infinity,
-                        height: (MediaQuery.of(context).size.width *
-                                (_loadedImage.height.toDouble() ?? 1)) /
-                            (_loadedImage.width.toDouble() ?? 1),
-                        child: CustomPaint(
-                            painter: RectPainter(
-                          stringBlocks: _stringBlocks,
-                          selectedBlockid: _selectedBlockIndex != null
-                              ? widget
-                                  .ocrImage.stringBlocks[_selectedBlockIndex].id
-                              : null,
-                        )),
-                      ),
+                          width: double.infinity,
+                          height: (MediaQuery.of(context).size.width *
+                                  (_loadedImage.height.toDouble() ?? 1)) /
+                              (_loadedImage.width.toDouble() ?? 1),
+                          child: widget.isAdding
+                              ? CustomPaint(
+                                  painter: RectPainter(
+                                      stringBlocks: [], newRect: _newRect),
+                                )
+                              : CustomPaint(
+                                  painter: RectPainter(
+                                  stringBlocks: _stringBlocks,
+                                  selectedBlockid: _selectedBlockIndex != null
+                                      ? widget.ocrImage
+                                          .stringBlocks[_selectedBlockIndex].id
+                                      : null,
+                                ))),
                     )
                   ],
                 );
