@@ -83,15 +83,11 @@ class _DisplayImageState extends State<DisplayImage> {
   }
 
   void _addNewBlockOnTap(TapUpDetails details) {
-    final xPos = details.localPosition.dx;
-    final yPos = details.localPosition.dy;
-    final quarterOfWidth = MediaQuery.of(context).size.width / 4;
+    final center = details.localPosition;
+    final thirdOfWidth = MediaQuery.of(context).size.width / 3;
 
-    widget.setNewRect(Rect.fromLTRB(
-        (xPos - quarterOfWidth) >= 0 ? xPos - quarterOfWidth : 0,
-        (yPos - 30) >= 0 ? yPos - 30 : 0,
-        xPos + quarterOfWidth,
-        yPos + 30));
+    widget.setNewRect(
+        Rect.fromCenter(center: center, width: thirdOfWidth, height: 50));
   }
 
   Future<ui.Image> loadImage(String asset) async {
@@ -103,6 +99,9 @@ class _DisplayImageState extends State<DisplayImage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.newRect != null) {
+      print(widget.newRect.top);
+    }
     return FutureBuilder(
         future: loadImage(widget.ocrImage.imageURL),
         builder: (context, snapshot) {
@@ -173,20 +172,17 @@ class _DisplayImageState extends State<DisplayImage> {
                           height: (MediaQuery.of(context).size.width *
                                   (_loadedImage.height.toDouble() ?? 1)) /
                               (_loadedImage.width.toDouble() ?? 1),
-                          child: widget.isAdding
-                              ? CustomPaint(
-                                  painter: RectPainter(
-                                      stringBlocks: [],
-                                      newRect: widget.newRect),
-                                )
-                              : CustomPaint(
-                                  painter: RectPainter(
-                                  stringBlocks: _stringBlocks,
-                                  selectedBlockid: _selectedBlockIndex != null
-                                      ? widget.ocrImage
-                                          .stringBlocks[_selectedBlockIndex].id
-                                      : null,
-                                ))),
+                          child: CustomPaint(
+                            painter: RectPainter(
+                              stringBlocks:
+                                  widget.isAdding ? [] : _stringBlocks,
+                              newRect: widget.newRect,
+                              selectedBlockid: _selectedBlockIndex != null
+                                  ? widget.ocrImage
+                                      .stringBlocks[_selectedBlockIndex].id
+                                  : null,
+                            ),
+                          )),
                     )
                   ],
                 );

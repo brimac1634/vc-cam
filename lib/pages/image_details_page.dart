@@ -24,12 +24,12 @@ class ImageDetailsPage extends StatefulWidget {
 class _ImageDetailsPageState extends State<ImageDetailsPage> {
   Rect _newRect;
   bool _isAdding = false;
-  bool _newRectIsAdded = false;
 
   void _addNewRectToStringBoxes(BuildContext context, Rect newRect) {
     final ocrImagesProvider = Provider.of<OCRImages>(context, listen: false);
 
     final newBlocks = [...ocrImagesProvider.selectedImage.stringBlocks];
+    print(newRect.top);
     newBlocks.add(StringBlock(
         id: Uuid().v4(), text: '', boundingBox: newRect, isUserCreated: true));
 
@@ -44,7 +44,6 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
 
     setState(() {
       _isAdding = false;
-      _newRectIsAdded = false;
       _newRect = null;
     });
   }
