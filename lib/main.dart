@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import './providers/ocr_images.dart';
 
@@ -16,6 +17,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor:
+          VCAppTheme.specialBlue, //or set color with: Color(0xFF0000FF)
+    ));
+
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (ctx) => OCRImages())],
       child: MaterialApp(

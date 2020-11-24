@@ -99,14 +99,10 @@ class _DisplayImageState extends State<DisplayImage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.newRect != null) {
-      print(widget.newRect.top);
-    }
     return FutureBuilder(
         future: loadImage(widget.ocrImage.imageURL),
         builder: (context, snapshot) {
           final ui.Image _loadedImage = snapshot.data;
-
           if (_loadedImage == null)
             return Container(
               color: VCAppTheme.white,
@@ -182,6 +178,11 @@ class _DisplayImageState extends State<DisplayImage> {
                                       .stringBlocks[_selectedBlockIndex].id
                                   : null,
                             ),
+                            child: Container(
+                                width: double.infinity,
+                                height: (MediaQuery.of(context).size.width *
+                                        (_loadedImage.height.toDouble() ?? 1)) /
+                                    (_loadedImage.width.toDouble() ?? 1)),
                           )),
                     )
                   ],
