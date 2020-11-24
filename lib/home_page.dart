@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vc_cam/providers/ocr_images.dart';
 
 import './pages/ocr_images_page.dart';
 import './pages/image_details_page.dart';
@@ -10,6 +9,7 @@ import './widgets/ml_image_picker.dart';
 import './widgets/custom_bottom_sheet.dart';
 
 import './models/ocr_image.dart';
+import './providers/ocr_images.dart';
 
 import 'vc_app_theme.dart';
 

@@ -7,6 +7,8 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
+import 'package:heic_to_jpg/heic_to_jpg.dart';
+import 'package:mime/mime.dart';
 
 import '../providers/ocr_images.dart';
 import '../models/ocr_image.dart';
@@ -55,6 +57,11 @@ class _MLImagePickerState extends State<MLImagePicker> {
           for (Asset asset in assetList) {
             final filePath =
                 await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+
+            String mimeStr = lookupMimeType(filePath);
+            print(mimeStr);
+            // String jpegPath = await HeicToJpg.convert(heicPath);
+
             final ocrImage = await analyzeImage(filePath, textRecognizer);
             if (ocrImage != null) {
               ocrImages.add(ocrImage);
