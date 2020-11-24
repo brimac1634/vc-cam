@@ -23,6 +23,7 @@ class ImageDetailsPage extends StatefulWidget {
 }
 
 class _ImageDetailsPageState extends State<ImageDetailsPage> {
+  bool _showTopBar = true;
   Rect _newRect;
   bool _isAdding = false;
 
@@ -62,20 +63,20 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
         value: SystemUiOverlayStyle.dark,
         child: Stack(children: [
           if (_ocrImageProvider.selectedImage != null)
-            GestureDetector(
-              onTap: () {
-                print('hey');
-                animationController.reverse();
+            DisplayImage(
+              ocrImage: _ocrImageProvider.selectedImage,
+              isAdding: _isAdding,
+              newRect: _newRect,
+              setNewRect: (Rect rect) {
+                setState(() {
+                  _newRect = rect;
+                });
               },
-              child: DisplayImage(
-                  ocrImage: _ocrImageProvider.selectedImage,
-                  isAdding: _isAdding,
-                  newRect: _newRect,
-                  setNewRect: (Rect rect) {
-                    setState(() {
-                      _newRect = rect;
-                    });
-                  }),
+              toggleTopBar: () {
+                setState(() {
+                  _showTopBar = !_showTopBar;
+                });
+              },
             ),
           Positioned(
               bottom: 0,
@@ -104,84 +105,93 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
                   ),
                 ),
               )),
-          TopBar(
-              topBarOpacity: 1.0,
-              animationController: animationController,
-              title: '',
-              canGoBack: true,
-              onBack: () {
-                _ocrImageProvider.selectedImage.stringBlocks.removeWhere(
-                    (block) => block.isUserCreated && block.editedText == null);
-                _ocrImageProvider.unselectImage();
-              },
-              child: Row(
-                children: [
-                  if (!_isAdding)
-                    IconButton(
-                      icon: Image.asset(
-                        'assets/trash.png',
-                        width: VCAppTheme.iconWidth,
-                        height: VCAppTheme.iconHeight,
-                      ),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return CustomAlertDialog(
-                                title: 'Delete',
-                                content: 'Are you sure you?',
-                                actions: [
-                                  FlatButton(
-                                    child: Text(
-                                      'No',
-                                      style: VCAppTheme.flatButton,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(false);
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text(
-                                      'Yes',
-                                      style: VCAppTheme.flatButton,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.of(context).pop(true);
-                                    },
-                                  )
-                                ],
-                              );
-                            }).then((delete) {
-                          if (delete) {
-                            _ocrImageProvider.deleteImage(
-                                _ocrImageProvider.selectedImage.id);
-                            Navigator.of(context).pop();
-                          }
-                        }).catchError((onError) {
-                          print(onError.toString());
-                        });
-                      },
-                    ),
-                  if (!_isAdding || (_isAdding && _newRectIsAdded))
-                    IconButton(
-                        icon: Image.asset(
-                          _newRectIsAdded
-                              ? 'assets/check.png'
-                              : 'assets/plus.png',
-                          width: VCAppTheme.iconWidth,
-                          height: VCAppTheme.iconHeight,
-                        ),
-                        onPressed: () {
-                          if (_newRectIsAdded) {
-                            _addNewRectToStringBoxes(context, _newRect);
-                          } else {
-                            setState(() {
-                              _isAdding = !_isAdding;
+          AnimatedOpacity(
+            duration: Duration(milliseconds: 200),
+            opacity: _showTopBar ? 1.0 : 0.0,
+            curve: Curves.easeOutSine,
+            child: IgnorePointer(
+              ignoring: !_showTopBar,
+              child: TopBar(
+                  topBarOpacity: 1.0,
+                  animationController: animationController,
+                  title: '',
+                  canGoBack: true,
+                  onBack: () {
+                    _ocrImageProvider.selectedImage.stringBlocks.removeWhere(
+                        (block) =>
+                            block.isUserCreated && block.editedText == null);
+                    _ocrImageProvider.unselectImage();
+                  },
+                  child: Row(
+                    children: [
+                      if (!_isAdding)
+                        IconButton(
+                          icon: Image.asset(
+                            'assets/trash.png',
+                            width: VCAppTheme.iconWidth,
+                            height: VCAppTheme.iconHeight,
+                          ),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomAlertDialog(
+                                    title: 'Delete',
+                                    content: 'Are you sure you?',
+                                    actions: [
+                                      FlatButton(
+                                        child: Text(
+                                          'No',
+                                          style: VCAppTheme.flatButton,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text(
+                                          'Yes',
+                                          style: VCAppTheme.flatButton,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                      )
+                                    ],
+                                  );
+                                }).then((delete) {
+                              if (delete) {
+                                _ocrImageProvider.deleteImage(
+                                    _ocrImageProvider.selectedImage.id);
+                                Navigator.of(context).pop();
+                              }
+                            }).catchError((onError) {
+                              print(onError.toString());
                             });
-                          }
-                        }),
-                ],
-              )),
+                          },
+                        ),
+                      if (!_isAdding || (_isAdding && _newRectIsAdded))
+                        IconButton(
+                            icon: Image.asset(
+                              _newRectIsAdded
+                                  ? 'assets/check.png'
+                                  : 'assets/plus.png',
+                              width: VCAppTheme.iconWidth,
+                              height: VCAppTheme.iconHeight,
+                            ),
+                            onPressed: () {
+                              if (_newRectIsAdded) {
+                                _addNewRectToStringBoxes(context, _newRect);
+                              } else {
+                                setState(() {
+                                  _isAdding = !_isAdding;
+                                });
+                              }
+                            }),
+                    ],
+                  )),
+            ),
+          ),
         ]),
       ),
     );

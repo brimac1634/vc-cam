@@ -18,12 +18,14 @@ class DisplayImage extends StatefulWidget {
   final bool isAdding;
   final Rect newRect;
   final Function(Rect) setNewRect;
+  final Function toggleTopBar;
 
   DisplayImage(
       {@required this.ocrImage,
       @required this.isAdding,
       this.newRect,
-      this.setNewRect});
+      this.setNewRect,
+      this.toggleTopBar});
 
   @override
   _DisplayImageState createState() => _DisplayImageState();
@@ -31,7 +33,6 @@ class DisplayImage extends StatefulWidget {
 
 class _DisplayImageState extends State<DisplayImage> {
   int _selectedBlockIndex;
-  bool _dragging = false;
   bool _scaling = false;
   double _baseScaleWidth;
   double _baseScaleHeight;
@@ -76,6 +77,7 @@ class _DisplayImageState extends State<DisplayImage> {
       });
       _settingModalBottomSheet(context);
     } else {
+      widget.toggleTopBar();
       setState(() {
         _selectedBlockIndex = null;
       });
