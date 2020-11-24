@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../widgets/top_bar.dart';
 import '../widgets/display_image.dart';
 import '../widgets/custom_alert_dialog.dart';
 
 import '../providers/ocr_images.dart';
+import '../models/string_block.dart';
+import '../models/ocr_image.dart';
 
 import '../vc_app_theme.dart';
 
@@ -19,27 +22,53 @@ class ImageDetailsPage extends StatefulWidget {
 }
 
 class _ImageDetailsPageState extends State<ImageDetailsPage> {
+  Rect _newRect;
   bool _isAdding = false;
   bool _newRectIsAdded = false;
+
+  void _addNewRectToStringBoxes(BuildContext context, Rect newRect) {
+    final ocrImagesProvider = Provider.of<OCRImages>(context, listen: false);
+
+    final newBlocks = [...ocrImagesProvider.selectedImage.stringBlocks];
+    newBlocks.add(StringBlock(
+        id: Uuid().v4(), text: '', boundingBox: newRect, isUserCreated: true));
+
+    ocrImagesProvider.updateImage(
+        ocrImagesProvider.selectedImage.id,
+        OCRImage(
+            id: ocrImagesProvider.selectedImage.id,
+            imageURL: ocrImagesProvider.selectedImage.imageURL,
+            stringBlocks: newBlocks,
+            createdAt: ocrImagesProvider.selectedImage.createdAt,
+            editedAt: ocrImagesProvider.selectedImage.editedAt));
+
+    setState(() {
+      _isAdding = false;
+      _newRectIsAdded = false;
+      _newRect = null;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final animationController =
         ModalRoute.of(context).settings.arguments as AnimationController;
     final _ocrImageProvider = Provider.of<OCRImages>(context);
+    final _newRectIsAdded = _newRect != null;
+
     return Scaffold(
       backgroundColor: VCAppTheme.background,
       body: Stack(children: [
         if (_ocrImageProvider.selectedImage != null)
           DisplayImage(
-            ocrImage: _ocrImageProvider.selectedImage,
-            isAdding: _isAdding,
-            setNewRectIsAdded: (bool rectIsAdded) {
-              setState(() {
-                _newRectIsAdded = rectIsAdded;
-              });
-            },
-          ),
+              ocrImage: _ocrImageProvider.selectedImage,
+              isAdding: _isAdding,
+              newRect: _newRect,
+              setNewRect: (Rect rect) {
+                setState(() {
+                  _newRect = rect;
+                });
+              }),
         Positioned(
             bottom: 0,
             left: 0,
@@ -53,7 +82,9 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Center(
                   child: Text(
-                    'Tap to place a new text box',
+                    _newRectIsAdded
+                        ? 'Drag or adjust the text box as needed'
+                        : 'Tap to place a new text box',
                     style: VCAppTheme.title,
                   ),
                 ),
@@ -117,17 +148,24 @@ class _ImageDetailsPageState extends State<ImageDetailsPage> {
                       });
                     },
                   ),
-                IconButton(
-                    icon: Image.asset(
-                      'assets/plus.png',
-                      width: VCAppTheme.iconWidth,
-                      height: VCAppTheme.iconHeight,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isAdding = !_isAdding;
-                      });
-                    })
+                if (!_isAdding || (_isAdding && _newRectIsAdded))
+                  IconButton(
+                      icon: Image.asset(
+                        _newRectIsAdded
+                            ? 'assets/check.png'
+                            : 'assets/plus.png',
+                        width: VCAppTheme.iconWidth,
+                        height: VCAppTheme.iconHeight,
+                      ),
+                      onPressed: () {
+                        if (_newRectIsAdded) {
+                          _addNewRectToStringBoxes(context, _newRect);
+                        } else {
+                          setState(() {
+                            _isAdding = !_isAdding;
+                          });
+                        }
+                      }),
               ],
             )),
       ]),

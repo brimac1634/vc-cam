@@ -3,29 +3,27 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uuid/uuid.dart';
-import 'package:provider/provider.dart';
 
 import './text_block_editor.dart';
-import './custom_painter_draggable.dart';
 
 import '../utils/rect_painter.dart';
 
 import '../models/string_block.dart';
 import '../models/ocr_image.dart';
-import '../providers/ocr_images.dart';
 
 import '../vc_app_theme.dart';
 
 class DisplayImage extends StatefulWidget {
   final OCRImage ocrImage;
   final bool isAdding;
-  final Function(bool) setNewRectIsAdded;
+  final Rect newRect;
+  final Function(Rect) setNewRect;
 
   DisplayImage(
       {@required this.ocrImage,
       @required this.isAdding,
-      this.setNewRectIsAdded});
+      this.newRect,
+      this.setNewRect});
 
   @override
   _DisplayImageState createState() => _DisplayImageState();
@@ -33,16 +31,13 @@ class DisplayImage extends StatefulWidget {
 
 class _DisplayImageState extends State<DisplayImage> {
   int _selectedBlockIndex;
-  StringBlock _newBlock;
-  Rect _newRect;
-
   bool _dragging = false;
 
   bool _insideRect(double x, double y) {
-    return x >= _newRect.left &&
-        x <= _newRect.right &&
-        y >= _newRect.top &&
-        y <= _newRect.bottom;
+    return x >= widget.newRect.left &&
+        x <= widget.newRect.right &&
+        y >= widget.newRect.top &&
+        y <= widget.newRect.bottom;
   }
 
   void _settingModalBottomSheet(context) {
@@ -89,13 +84,11 @@ class _DisplayImageState extends State<DisplayImage> {
     final yPos = details.localPosition.dy;
     final quarterOfWidth = MediaQuery.of(context).size.width / 4;
 
-    setState(() {
-      _newRect = Rect.fromLTRB(
-          (xPos - quarterOfWidth) >= 0 ? xPos - quarterOfWidth : 0,
-          (yPos - 30) >= 0 ? yPos - 30 : 0,
-          xPos + quarterOfWidth,
-          yPos + 30);
-    });
+    widget.setNewRect(Rect.fromLTRB(
+        (xPos - quarterOfWidth) >= 0 ? xPos - quarterOfWidth : 0,
+        (yPos - 30) >= 0 ? yPos - 30 : 0,
+        xPos + quarterOfWidth,
+        yPos + 30));
   }
 
   Future<ui.Image> loadImage(String asset) async {
@@ -162,40 +155,13 @@ class _DisplayImageState extends State<DisplayImage> {
                       },
                       onPanUpdate: (details) {
                         if (_dragging) {
-                          setState(() {
-                            _newRect = Rect.fromLTRB(
-                                _newRect.left + details.delta.dx,
-                                _newRect.top + details.delta.dy,
-                                _newRect.right + details.delta.dx,
-                                _newRect.bottom + details.delta.dy);
-                          });
+                          widget.setNewRect(Rect.fromLTRB(
+                              widget.newRect.left + details.delta.dx,
+                              widget.newRect.top + details.delta.dy,
+                              widget.newRect.right + details.delta.dx,
+                              widget.newRect.bottom + details.delta.dy));
                         }
                       },
-                      // onPanUpdate: (details) {
-                      //   print(details.delta.dx);
-                      //   RenderBox box = context.findRenderObject();
-                      //   final offset =
-                      //       box.globalToLocal(details.globalPosition);
-                      //   if (widget.isAdding &&
-                      //       _newBlock != null &&
-                      //       _newBlock.boundingBox.contains(offset)) {
-                      //     setState(() {
-                      //       _newBlock = StringBlock(
-                      //           id: 'temp',
-                      //           text: '',
-                      //           boundingBox: Rect.fromLTRB(
-                      //               _newBlock.boundingBox.left +
-                      //                   details.delta.dx,
-                      //               _newBlock.boundingBox.left +
-                      //                   details.delta.dy,
-                      //               _newBlock.boundingBox.left +
-                      //                   details.delta.dx,
-                      //               _newBlock.boundingBox.left +
-                      //                   details.delta.dy),
-                      //           isUserCreated: true);
-                      //     });
-                      // }
-                      // },
                       child: Container(
                           width: double.infinity,
                           height: (MediaQuery.of(context).size.width *
@@ -204,7 +170,8 @@ class _DisplayImageState extends State<DisplayImage> {
                           child: widget.isAdding
                               ? CustomPaint(
                                   painter: RectPainter(
-                                      stringBlocks: [], newRect: _newRect),
+                                      stringBlocks: [],
+                                      newRect: widget.newRect),
                                 )
                               : CustomPaint(
                                   painter: RectPainter(
