@@ -17,11 +17,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor:
-          VCAppTheme.specialBlue, //or set color with: Color(0xFF0000FF)
-    ));
-
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (ctx) => OCRImages())],
       child: MaterialApp(

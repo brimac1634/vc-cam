@@ -22,7 +22,6 @@ class OCRImagesPage extends StatefulWidget {
 
 class _OCRImagesPageState extends State<OCRImagesPage>
     with TickerProviderStateMixin {
-  // AnimationController animationController;
   final ScrollController scrollController = ScrollController();
 
   double _topBarOpacity = 0.0;
@@ -31,9 +30,6 @@ class _OCRImagesPageState extends State<OCRImagesPage>
 
   @override
   void initState() {
-    // animationController = AnimationController(
-    //     duration: const Duration(milliseconds: 1000), vsync: this);
-
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
         if (_topBarOpacity != 1.0) {
