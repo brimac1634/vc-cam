@@ -7,6 +7,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 
 import '../providers/ocr_images.dart';
 import '../models/ocr_image.dart';
@@ -55,6 +56,7 @@ class _MLImagePickerState extends State<MLImagePicker> {
           for (Asset asset in assetList) {
             final filePath =
                 await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+
             final ocrImage = await analyzeImage(filePath, textRecognizer);
             if (ocrImage != null) {
               ocrImages.add(ocrImage);
@@ -74,7 +76,19 @@ class _MLImagePickerState extends State<MLImagePicker> {
   Future<OCRImage> analyzeImage(
       String filePath, TextRecognizer textRecognizer) async {
     if (filePath == null || textRecognizer == null) return null;
-    final visionImage = FirebaseVisionImage.fromFile(File(filePath));
+
+    File file;
+    if (Platform.isIOS) {
+      ImageProperties properties =
+          await FlutterNativeImage.getImageProperties(filePath);
+      file = await FlutterNativeImage.compressImage(filePath,
+          quality: 100,
+          targetWidth: properties.width,
+          targetHeight: properties.height);
+    } else {
+      file = File(filePath);
+    }
+    final visionImage = FirebaseVisionImage.fromFile(file);
     final visionText = await textRecognizer.processImage(visionImage);
 
     List<StringBlock> stringBlocks = [];
