@@ -9,10 +9,21 @@
     -Add key properties file
     -Add key file to gitignore
     -Configure signing in build gradle
+    -Run flutter build app bundle
+    -Log into Google play console
+    -Create application and go through steps
+    -Create a release in the application and upload bundled project
 
     IOS
     https://flutter.dev/docs/deployment/ios
-    Add Icons and splash screens
+    -Add Icons and splash screens
+    -Log into App store connect
+    -Register new app ID
+    -Add app in App Store Connect and go through steps
+    -Open Runner folder in Xcode and set app name and other build details
+    -Run Flutter build ios
+    -Run Product > Archive
+    -Click on app in pop up and press publish
 
 -How would you manage back-end synchronization/versioning in response to Android or iOS updates?
 
