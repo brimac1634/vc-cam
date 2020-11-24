@@ -2,6 +2,18 @@
 
 -What is the process to deploy/release the mobile app to the Google Play or Apple Store? 
 
+    ANDROID
+    https://flutter.dev/docs/deployment/android
+    -Add Icons and splash screens
+    -Sign the app by creating a keystore
+    -Add key properties file
+    -Add key file to gitignore
+    -Configure signing in build gradle
+
+    IOS
+    https://flutter.dev/docs/deployment/ios
+    Add Icons and splash screens
+
 -How would you manage back-end synchronization/versioning in response to Android or iOS updates?
 
     There a couple ways we could manage versioning, depending on the desired outcome. 
