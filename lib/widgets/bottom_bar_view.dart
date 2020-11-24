@@ -1,8 +1,6 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../vc_app_theme.dart';
-import '../models/tab_icon_data.dart';
 
 class BottomBarView extends StatefulWidget {
   const BottomBarView({Key key, this.addClick}) : super(key: key);

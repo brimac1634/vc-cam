@@ -4,6 +4,8 @@ import '../models/string_block.dart';
 
 import '../models/ocr_image.dart';
 
+import '../utils/db_helper.dart';
+
 class OCRImages with ChangeNotifier {
   Map<String, OCRImage> _images = {};
 
@@ -47,6 +49,28 @@ class OCRImages with ChangeNotifier {
       _images[ocrImage.id] = ocrImage;
     });
     notifyListeners();
+
+    ocrImages.forEach((ocrImage) {
+      DBHelper.insert(DBHelper.ocrImages, {
+        'id': ocrImage.id,
+        'image_url': ocrImage.imageURL,
+        'created_at': ocrImage.createdAt,
+        'edited_at': ocrImage.editedAt
+      });
+
+      ocrImage.stringBlocks.forEach((block) {
+        DBHelper.insert(DBHelper.stringBlocks, {
+          'id': block.id,
+          'text': block.text,
+          'edited_text': block.editedText,
+          'left': block.boundingBox.left,
+          'top': block.boundingBox.top,
+          'right': block.boundingBox.right,
+          'bottom': block.boundingBox.bottom,
+          'is_user_created': block.isUserCreated
+        });
+      });
+    });
   }
 
   void updateImage(String id, OCRImage ocrImage) {
