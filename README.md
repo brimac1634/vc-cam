@@ -2,9 +2,12 @@
 -Brian MacPherson
 
 
-![Alt text](./dev_assets/screen_shots/photo1.png?raw=true "Home Page")
+<img src="./dev_assets/screen_shots/photo1.png" width="250"/>
+<img src="./dev_assets/screen_shots/photo2.png" width="250"/>
+<img src="./dev_assets/screen_shots/photo3.png" width="250"/>
+<!-- ![Alt text](./dev_assets/screen_shots/photo1.png?raw=true "Home Page")
 ![Alt text](./dev_assets/screen_shots/photo2.png?raw=true "Image Page")
-![Alt text](./dev_assets/screen_shots/photo3.png?raw=true "Image Page Editor")
+![Alt text](./dev_assets/screen_shots/photo3.png?raw=true "Image Page Editor") -->
 
 -How to run locally
 
