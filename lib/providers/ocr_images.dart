@@ -50,27 +50,7 @@ class OCRImages with ChangeNotifier {
     });
     notifyListeners();
 
-    ocrImages.forEach((ocrImage) {
-      DBHelper.insert(DBHelper.ocrImages, {
-        'id': ocrImage.id,
-        'image_url': ocrImage.imageURL,
-        'created_at': ocrImage.createdAt,
-        'edited_at': ocrImage.editedAt
-      });
-
-      ocrImage.stringBlocks.forEach((block) {
-        DBHelper.insert(DBHelper.stringBlocks, {
-          'id': block.id,
-          'text': block.text,
-          'edited_text': block.editedText,
-          'left': block.boundingBox.left,
-          'top': block.boundingBox.top,
-          'right': block.boundingBox.right,
-          'bottom': block.boundingBox.bottom,
-          'is_user_created': block.isUserCreated
-        });
-      });
-    });
+    insertOCRImages(ocrImages);
   }
 
   void updateImage(String id, OCRImage ocrImage) {
@@ -94,5 +74,36 @@ class OCRImages with ChangeNotifier {
         _images.remove(id);
       });
     }
+  }
+
+  void insertOCRImages(List<OCRImage> ocrImages) {
+    ocrImages.forEach((ocrImage) {
+      DBHelper.insert(DBHelper.ocrImages, {
+        'id': ocrImage.id,
+        'image_url': ocrImage.imageURL,
+        'created_at': ocrImage.createdAt,
+        'edited_at': ocrImage.editedAt
+      });
+
+      ocrImage.stringBlocks.forEach((block) {
+        DBHelper.insert(DBHelper.stringBlocks, {
+          'id': block.id,
+          'ocr_image': ocrImage.id,
+          'text': block.text,
+          'edited_text': block.editedText,
+          'left': block.boundingBox.left,
+          'top': block.boundingBox.top,
+          'right': block.boundingBox.right,
+          'bottom': block.boundingBox.bottom,
+          'is_user_created': block.isUserCreated
+        });
+      });
+    });
+  }
+
+  Future<void> fetchAndSetOcrImages() async {
+    final dataList = await DBHelper.getData(DBHelper.ocrImages);
+    print(dataList);
+    notifyListeners();
   }
 }

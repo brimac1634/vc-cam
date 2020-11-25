@@ -55,11 +55,6 @@ class _OCRImagesPageState extends State<OCRImagesPage>
     super.initState();
   }
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 50));
-    return true;
-  }
-
   @override
   Widget build(BuildContext context) {
     final _imagesProvider = Provider.of<OCRImages>(context);
@@ -72,7 +67,8 @@ class _OCRImagesPageState extends State<OCRImagesPage>
           value: SystemUiOverlayStyle.dark,
           child: Stack(children: [
             FutureBuilder<bool>(
-              future: getData(),
+              future: Provider.of<OCRImages>(context, listen: false)
+                  .fetchAndSetOcrImages(),
               builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                 if (!snapshot.hasData) {
                   return const SizedBox();
