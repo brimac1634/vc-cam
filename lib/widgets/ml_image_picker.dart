@@ -112,7 +112,8 @@ class _MLImagePickerState extends State<MLImagePicker> {
         id: Uuid().v4(),
         imageURL: filePath,
         stringBlocks: stringBlocks,
-        createdAt: DateTime.now());
+        createdAt: DateTime.now(),
+        editedAt: DateTime.now());
   }
 
   @override

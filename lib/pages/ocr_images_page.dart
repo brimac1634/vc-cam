@@ -66,91 +66,76 @@ class _OCRImagesPageState extends State<OCRImagesPage>
         body: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.dark,
           child: Stack(children: [
-            FutureBuilder<bool>(
-              future: Provider.of<OCRImages>(context, listen: false)
-                  .fetchAndSetOcrImages(),
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox();
-                } else {
-                  return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _imagesProvider.imagesArray.length >= 1
-                          ? GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
-                                      crossAxisSpacing: 8,
-                                      mainAxisSpacing: 8,
-                                      childAspectRatio: 1.0),
-                              controller: scrollController,
-                              padding: EdgeInsets.only(
-                                top: AppBar().preferredSize.height +
-                                    MediaQuery.of(context).padding.top +
-                                    24,
-                                bottom:
-                                    62 + MediaQuery.of(context).padding.bottom,
-                              ),
-                              itemCount: _imagesProvider.imagesArray.length,
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (BuildContext context, int index) {
-                                final int count =
-                                    _imagesProvider.imagesArray.length > 10
-                                        ? 10
-                                        : _imagesProvider.imagesArray.length;
-                                final Animation<double> _animation =
-                                    Tween<double>(begin: 0.0, end: 1.0).animate(
-                                        CurvedAnimation(
-                                            parent: widget.animationController,
-                                            curve: Interval(
-                                                (1 / count) * index, 1.0,
-                                                curve: Curves.fastOutSlowIn)));
-                                widget.animationController.forward();
-                                return InkWell(
-                                  onTap: () {
-                                    final _imageId =
-                                        _imagesProvider.imagesArray[index].id;
-                                    if (_isEditing) {
-                                      setState(() {
-                                        _selectedItems[_imageId] =
-                                            _selectedItems[_imageId]
-                                                ? !_selectedItems[_imageId]
-                                                : true;
-                                      });
-                                    } else {
-                                      _imagesProvider.selectImage(_imageId);
-                                      Navigator.of(context).pushNamed(
-                                          ImageDetailsPage.pathName,
-                                          arguments:
-                                              widget.animationController);
-                                    }
-                                  },
-                                  child: GridItem(
-                                    animationController:
-                                        widget.animationController,
-                                    animation: _animation,
-                                    ocrImage:
-                                        _imagesProvider.imagesArray[index],
-                                    isSelecting: _isEditing,
-                                    isSelected: _selectedItems[_imagesProvider
-                                        .imagesArray[index].id] ??= false,
-                                  ),
-                                );
-                              },
-                            )
-                          : Center(
-                              child: Text(
-                                'Press the plus button below to begin',
-                                style: VCAppTheme.title,
-                              ),
-                            ));
-                }
-              },
-            ),
+            Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _imagesProvider.imagesArray.length >= 1
+                    ? GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: 1.0),
+                        controller: scrollController,
+                        padding: EdgeInsets.only(
+                          top: AppBar().preferredSize.height +
+                              MediaQuery.of(context).padding.top +
+                              24,
+                          bottom: 62 + MediaQuery.of(context).padding.bottom,
+                        ),
+                        itemCount: _imagesProvider.imagesArray.length,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (BuildContext context, int index) {
+                          final int count =
+                              _imagesProvider.imagesArray.length > 10
+                                  ? 10
+                                  : _imagesProvider.imagesArray.length;
+                          final Animation<double> _animation =
+                              Tween<double>(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: widget.animationController,
+                                      curve: Interval((1 / count) * index, 1.0,
+                                          curve: Curves.fastOutSlowIn)));
+                          widget.animationController.forward();
+                          return InkWell(
+                            onTap: () {
+                              final _imageId =
+                                  _imagesProvider.imagesArray[index].id;
+                              if (_isEditing) {
+                                setState(() {
+                                  _selectedItems[_imageId] =
+                                      _selectedItems[_imageId]
+                                          ? !_selectedItems[_imageId]
+                                          : true;
+                                });
+                              } else {
+                                _imagesProvider.selectImage(_imageId);
+                                Navigator.of(context).pushNamed(
+                                    ImageDetailsPage.pathName,
+                                    arguments: widget.animationController);
+                              }
+                            },
+                            child: GridItem(
+                              animationController: widget.animationController,
+                              animation: _animation,
+                              ocrImage: _imagesProvider.imagesArray[index],
+                              isSelecting: _isEditing,
+                              isSelected: _selectedItems[_imagesProvider
+                                  .imagesArray[index].id] ??= false,
+                            ),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text(
+                          'Press the plus button below to begin',
+                          style: VCAppTheme.title,
+                        ),
+                      )),
             TopBar(
               topBarOpacity: _topBarOpacity,
               animationController: widget.animationController,
               title: 'Images',
+              onBack: () {},
               child: Row(
                 children: [
                   AnimatedOpacity(

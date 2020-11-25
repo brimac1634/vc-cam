@@ -36,11 +36,6 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 200));
-    return true;
-  }
-
   void _settingModalBottomSheet(context) async {
     try {
       List<OCRImage> imageList = await showModalBottomSheet(
@@ -76,7 +71,8 @@ class _HomePageState extends State<HomePage>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: FutureBuilder<bool>(
-          future: getData(),
+          future: Provider.of<OCRImages>(context, listen: false)
+              .fetchAndSetOcrImages(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
             if (!snapshot.hasData) {
               return const SizedBox();

@@ -14,5 +14,5 @@ class OCRImage {
       @required this.imageURL,
       @required this.stringBlocks,
       @required this.createdAt,
-      this.editedAt});
+      @required this.editedAt});
 }

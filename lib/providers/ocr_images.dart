@@ -81,8 +81,8 @@ class OCRImages with ChangeNotifier {
       DBHelper.insert(DBHelper.ocrImages, {
         'id': ocrImage.id,
         'image_url': ocrImage.imageURL,
-        'created_at': ocrImage.createdAt,
-        'edited_at': ocrImage.editedAt
+        'created_at': ocrImage.createdAt.toIso8601String(),
+        'edited_at': ocrImage.editedAt.toIso8601String()
       });
 
       ocrImage.stringBlocks.forEach((block) {
@@ -90,20 +90,25 @@ class OCRImages with ChangeNotifier {
           'id': block.id,
           'ocr_image': ocrImage.id,
           'text': block.text,
-          'edited_text': block.editedText,
+          'edited_text': block.editedText ?? '',
           'left': block.boundingBox.left,
           'top': block.boundingBox.top,
           'right': block.boundingBox.right,
           'bottom': block.boundingBox.bottom,
-          'is_user_created': block.isUserCreated
+          'is_user_created': block.isUserCreated ? 1 : 0
         });
       });
     });
   }
 
-  Future<void> fetchAndSetOcrImages() async {
-    final dataList = await DBHelper.getData(DBHelper.ocrImages);
+  Future<bool> fetchAndSetOcrImages() async {
+    final dataList = await DBHelper.getData("""
+      SELECT * FROM ${DBHelper.ocrImages}
+      INNER JOIN ${DBHelper.stringBlocks}
+      ON ${DBHelper.stringBlocks}.ocr_image = ${DBHelper.ocrImages}.id
+    """);
     print(dataList);
+    return true;
     notifyListeners();
   }
 }
