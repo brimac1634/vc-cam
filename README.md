@@ -1,13 +1,11 @@
 # vc_cam
 -Brian MacPherson
 
-
-<img src="./dev_assets/screen_shots/photo1.png" width="250"/>
-<img src="./dev_assets/screen_shots/photo2.png" width="250"/>
-<img src="./dev_assets/screen_shots/photo3.png" width="250"/>
-<!-- ![Alt text](./dev_assets/screen_shots/photo1.png?raw=true "Home Page")
-![Alt text](./dev_assets/screen_shots/photo2.png?raw=true "Image Page")
-![Alt text](./dev_assets/screen_shots/photo3.png?raw=true "Image Page Editor") -->
+<p float="middle">
+  <img src="./dev_assets/screen_shots/photo1.png" width="250"/>
+    <img src="./dev_assets/screen_shots/photo2.png" width="250"/>
+    <img src="./dev_assets/screen_shots/photo3.png" width="250"/>
+</p>
 
 -How to run locally
 
