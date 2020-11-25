@@ -17,6 +17,7 @@
      
     -Run "flutter doctor" in the terminal to ensure that everything required is installed properly
     -(Optional) Add/Install flutter plugin with VS Code if you wish to see the code in a neatly formatted manner
+    -Clone repository locally and cd into it's root folder
     -In the terminal, run "flutter run". If you already have a simulator open, it will open there. If you have a real phone plugged in, it will open on your real phone. If running on a real device, I suggest running "flutter run --release" so that the app will remain on the phone even after unplugging.
 
 -What is the process to deploy/release the mobile app to the Google Play or Apple Store? 
